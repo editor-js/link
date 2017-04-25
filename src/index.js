@@ -7,4 +7,10 @@ module.exports = (function (){
 
     var settings = require('./settings');
 
+    return {
+        render : render,
+        saver : saver,
+        makeSettings : settings
+    }
+
 })();

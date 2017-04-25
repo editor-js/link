@@ -1,0 +1,33 @@
+.link-holder {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    border-radius: 3px;
+}
+
+.link-holder__input {
+    width: 100%;
+    height: 30px;
+    outline: none;
+}
+
+.link-holder__image {
+    width: 70px;
+    float: right;
+}
+
+.left-column {
+    padding: 0 20px 12px;
+}
+
+.left-column__description {
+    font-size: 0.88em;
+}
+
+.left-column__anchor {
+    display: block;
+    font-size: .75em;
+    margin-top: 20px;
+    text-decoration: none !important;
+    border: 0 !important;
+    outline: none !important;
+}

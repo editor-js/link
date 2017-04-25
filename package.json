@@ -1,0 +1,29 @@
+{
+  "name": "codex.editor.linkplugin",
+  "version": "1.0.0",
+  "description": "Link Plugin",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codex-editor/link.git"
+  },
+  "keywords": [
+    "cdxEditor",
+    "codex.editor",
+    "link",
+    "link",
+    "plugin"
+  ],
+  "author": "Khaydarov Murod",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codex-editor/link/issues"
+  },
+  "homepage": "https://github.com/codex-editor/link#readme",
+  "devDependencies": {
+    "webpack": "^2.4.1"
+  }
+}
