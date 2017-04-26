@@ -1,3 +1,11 @@
-/**
- * Created by khaydarovm on 25.04.17.
- */
+module.exports = ( function () {
+
+    function saveData (blockContent) {
+
+        console.log(blockContent);
+
+    }
+
+    return saveData
+
+})();

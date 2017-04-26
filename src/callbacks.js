@@ -11,8 +11,6 @@ module.exports = ( function () {
         clipboardData = event.clipboardData || window.clipboardData;
         pastedURL = clipboardData.getData('Text');
 
-        console.log(pastedURL);
-
         /**
          * Use editors API
          */

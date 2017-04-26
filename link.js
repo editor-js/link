@@ -64,7 +64,7 @@ var cdxEditorLink =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,80 +73,24 @@ var cdxEditorLink =
 
 module.exports = ( function () {
 
-    var ui_ = __webpack_require__(4);
-
-    function make_ (data) {
-
-        var holder = ui_.drawLinkHolder();
-
-        return holder;
-
-    }
-
-
-    function render (data) {
-        return make_ (data);
-    }
-
-    return render;
-
-})();
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/**
- * Created by khaydarovm on 25.04.17.
- */
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/**
- * Created by khaydarovm on 25.04.17.
- */
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-module.exports = (function (){
-
-    var render = __webpack_require__(0);
-
-    var saver = __webpack_require__(1);
-
-    var settings = __webpack_require__(2);
-
-    return {
-        render : render,
-        saver : saver,
-        makeSettings : settings
-    }
-
-})();
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = ( function () {
-
     var css = {
 
         linkHolder : 'link-holder',
+        holderWithMiniature : 'link-holder--miniature',
+        holderWithCover : 'link-holder--cover',
         inputElement : 'link-holder__input',
-        parsedURLImage : 'link-holder__image',
-        leftColumn : 'left-column',
-        parsedDescription : 'left-column__desciption',
-        link : 'left-column__anchor'
+        parsedURLImageMiniatured : 'link-holder__image--miniatured',
+        parsedURLImageCovered : 'link-holder__image--covered',
+        leftColumnMiniature : 'left-column--miniature',
+        leftColumnCover : 'left-column--cover',
+        parsedDescription : 'left-column__description',
+        link : 'left-column__anchor',
+        linkSettings : 'link-settings',
+        linkSettingsItem : 'link-settings__item'
 
     };
+
+    var linkHolder = null;
 
     function drawInput () {
 
@@ -166,6 +110,8 @@ module.exports = ( function () {
         holder.classList.add(css.linkHolder);
         holder.appendChild(inputElement);
 
+        linkHolder = holder;
+
         inputElement.addEventListener('paste', callbacks.URLPasted.bind(inputElement));
 
         return holder;
@@ -181,19 +127,21 @@ module.exports = ( function () {
             description = document.createElement('DIV'),
             link = document.createElement('A');
 
+        linkHolder.classList.add(css.holderWithMiniature);
+
         title.textContent = data.title;
 
         description.textContent = data.description;
         description.classList.add(css.parsedDescription);
 
         image.src = data.image;
-        image.classList.add(css.parsedURLImage);
+        image.classList.add(css.parsedURLImageMiniatured);
 
         link.textContent = data.linkText;
         link.href = data.linkUrl;
         link.classList.add(css.link);
 
-        leftColumn.classList.add(css.leftColumn);
+        leftColumn.classList.add(css.leftColumnMiniature);
         leftColumn.appendChild(title);
         leftColumn.appendChild(description);
         leftColumn.appendChild(link);
@@ -208,42 +156,141 @@ module.exports = ( function () {
 
         var holder = document.createDocumentFragment(),
             title = document.createElement('H2'),
+            leftColumn = document.createElement('DIV'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
             link = document.createElement('A');
 
+        linkHolder.classList.add(css.holderWithCover);
+
         title.textContent = data.title;
 
         description.textContent = data.description;
+        description.classList.add(css.parsedDescription);
 
         image.src = data.image;
-        image.classList.add(css.parsedURLImage);
+        image.classList.add(css.parsedURLImageCovered);
 
         link.textContent = data.linkText;
         link.href = data.linkUrl;
 
+        leftColumn.classList.add(css.leftColumnCover);
+        leftColumn.appendChild(title);
+        leftColumn.appendChild(description);
+        leftColumn.appendChild(link);
+
         holder.appendChild(image);
-        holder.appendChild(title);
-        holder.appendChild(description);
-        holder.appendChild(link);
+        holder.appendChild(leftColumn);
 
         return holder;
+
+    }
+
+    function drawSettingsHolder () {
+
+        var holder = document.createElement('DIV');
+        holder.classList.add(css.linkSettings);
+        return holder;
+
+    }
+
+    function drawSettingsItem (itemTypes, item) {
+
+        var settingsItem = document.createElement('SPAN');
+        settingsItem.textContent = itemTypes[item];
+        settingsItem.classList.add(css.linkSettingsItem);
+
+        return settingsItem;
 
     }
 
     return {
         drawInput,
         drawLinkHolder,
-        drawEmbedWithStyleOne
+        drawEmbedWithStyleOne,
+        drawEmbedWithStyleTwo,
+        drawSettingsHolder,
+        drawSettingsItem
     }
 
 
 })();
 
-var callbacks = __webpack_require__(5);
+var callbacks = __webpack_require__(4);
 
 /***/ }),
-/* 5 */
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = ( function () {
+
+    function make_ (data) {
+
+        var holder = ui.drawLinkHolder();
+
+        return holder;
+
+    }
+
+    function render (data) {
+        return make_ (data);
+    }
+
+    return render;
+
+})();
+
+var ui = __webpack_require__(0);
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = ( function () {
+
+    function saveData (blockContent) {
+
+        console.log(blockContent);
+
+    }
+
+    return saveData
+
+})();
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = ( function () {
+
+    function makeSettings () {
+
+        var holder = ui.drawSettingsHolder(),
+            types = {
+                miniature : 'Без обложки',
+                cover : 'С обложкой'
+            };
+
+        for (var type in types) {
+
+            var settingsItem = ui.drawSettingsItem(types, type);
+            holder.appendChild(settingsItem);
+
+        }
+
+        return holder;
+
+    }
+
+    return makeSettings;
+
+})();
+
+var ui = __webpack_require__(0);
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = ( function () {
@@ -258,8 +305,6 @@ module.exports = ( function () {
 
         clipboardData = event.clipboardData || window.clipboardData;
         pastedURL = clipboardData.getData('Text');
-
-        console.log(pastedURL);
 
         /**
          * Use editors API
@@ -300,7 +345,26 @@ module.exports = ( function () {
 
 })();
 
-var ui = __webpack_require__(4);
+var ui = __webpack_require__(0);
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+module.exports = (function (){
+
+    var render = __webpack_require__(1);
+    var saver = __webpack_require__(2);
+    var settings = __webpack_require__(3);
+
+    return {
+        render : render,
+        save : saver,
+        settings : settings
+    }
+
+})();
 
 /***/ })
 /******/ ]);

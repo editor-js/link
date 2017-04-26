@@ -1,15 +1,12 @@
 module.exports = ( function () {
 
-    var ui_ = require('./ui');
-
     function make_ (data) {
 
-        var holder = ui_.drawLinkHolder();
+        var holder = ui.drawLinkHolder();
 
         return holder;
 
     }
-
 
     function render (data) {
         return make_ (data);
@@ -18,3 +15,5 @@ module.exports = ( function () {
     return render;
 
 })();
+
+var ui = require('./ui');
