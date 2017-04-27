@@ -97,6 +97,7 @@ module.exports = ( function () {
         var inputElement = document.createElement('INPUT');
         inputElement.type = 'input';
         inputElement.classList.add(css.inputElement);
+        inputElement.placeholder = 'Вставьте ссылку';
 
         return inputElement;
 
@@ -205,6 +206,7 @@ module.exports = ( function () {
     }
 
     return {
+        linkHolder,
         drawInput,
         drawLinkHolder,
         drawEmbedWithStyleOne,
@@ -226,14 +228,26 @@ module.exports = ( function () {
 
     function make_ (data) {
 
-        var holder = ui.drawLinkHolder();
+        var holder;
+
+        if (data && data.style) {
+
+            holder = ui.drawEmbedWithStyleOne(data);
+
+        } else {
+
+            holder = ui.drawLinkHolder();
+
+        }
 
         return holder;
 
     }
 
     function render (data) {
+
         return make_ (data);
+
     }
 
     return render;
@@ -277,9 +291,23 @@ module.exports = ( function () {
             var settingsItem = ui.drawSettingsItem(types, type);
             holder.appendChild(settingsItem);
 
+            settingsItem.dataset.style = type;
+            settingsItem.addEventListener('click', handleSettingItems);
         }
 
         return holder;
+
+    }
+
+    function handleSettingItems () {
+
+        switch (this.dataset.style) {
+            case 'miniature':
+                break;
+            case 'cover':
+                console.log('coer');
+                break;
+        }
 
     }
 
@@ -288,6 +316,7 @@ module.exports = ( function () {
 })();
 
 var ui = __webpack_require__(0);
+var render = __webpack_require__(1);
 
 /***/ }),
 /* 4 */
@@ -321,15 +350,30 @@ module.exports = ( function () {
 
     function beforeSend () {
 
-        console.log('before');
+        var input = this,
+            intervalID;
 
+        input.value = "Обрабатывается";
+        input.disabled = true;
+
+        intervalID = setInterval( function () {
+
+            input.value += '.';
+
+        }, 400);
+
+        setTimeout( function () {
+
+            clearInterval(intervalID);
+
+        }, 1200);
     }
 
     function success (result) {
 
         var parsedJSON = JSON.parse(result),
             input = this,
-            embed = ui.drawEmbedWithStyleOne(parsedJSON);
+            embed = ui.drawEmbedWithStyleTwo(parsedJSON);
 
         input.replaceWith(embed);
 

@@ -26,15 +26,30 @@ module.exports = ( function () {
 
     function beforeSend () {
 
-        console.log('before');
+        var input = this,
+            intervalID;
 
+        input.value = "Обрабатывается";
+        input.disabled = true;
+
+        intervalID = setInterval( function () {
+
+            input.value += '.';
+
+        }, 400);
+
+        setTimeout( function () {
+
+            clearInterval(intervalID);
+
+        }, 1200);
     }
 
     function success (result) {
 
         var parsedJSON = JSON.parse(result),
             input = this,
-            embed = ui.drawEmbedWithStyleOne(parsedJSON);
+            embed = ui.drawEmbedWithStyleTwo(parsedJSON);
 
         input.replaceWith(embed);
 

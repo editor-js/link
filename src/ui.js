@@ -24,6 +24,7 @@ module.exports = ( function () {
         var inputElement = document.createElement('INPUT');
         inputElement.type = 'input';
         inputElement.classList.add(css.inputElement);
+        inputElement.placeholder = 'Вставьте ссылку';
 
         return inputElement;
 
@@ -132,6 +133,7 @@ module.exports = ( function () {
     }
 
     return {
+        linkHolder,
         drawInput,
         drawLinkHolder,
         drawEmbedWithStyleOne,
