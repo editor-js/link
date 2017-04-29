@@ -1,11 +1,11 @@
 module.exports = ( function () {
 
-    function saveData (blockContent) {
+    function saveData(blockContent) {
 
         console.log(blockContent);
 
     }
 
-    return saveData
+    return saveData;
 
 })();

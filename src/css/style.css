@@ -1,0 +1,89 @@
+.link-holder {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.link-holder--miniature {
+    padding: 15px;
+}
+
+.link-holder {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.link-holder--miniature {
+    padding: 15px;
+}
+
+.link-holder--cover {
+
+}
+
+.link-holder__input {
+    width: 100%;
+    height: 30px;
+    border: 0;
+    padding: 6px 12px;
+    outline: none;
+}
+
+.link-holder__input::before {
+    content: 'Вставьте ссылку';
+    opacity: .7;
+}
+
+.link-holder__image--miniatured {
+    width: 70px;
+    height: 70px;
+    border-radius: 2px;
+    float: right;
+}
+
+.link-holder__image--covered {
+    display: block;
+    width: 100%;
+    height: 160px;
+}
+
+.left-column {
+}
+
+.left-column--miniature {
+    max-width: 80%;
+    padding: 0 20px 12px;
+}
+
+.left-column--cover {
+    padding: 0 50px 20px;
+}
+
+.left-column__description {
+    font-size: 0.88em;
+    margin-bottom: 15px;
+}
+
+.left-column__anchor {
+    font-size: .75em;
+    text-decoration: none !important;
+    border: 0 !important;
+    outline: none !important;
+}
+
+/** Settings **/
+.link-settings {
+    display: flex;
+}
+
+.link-settings__item {
+    padding: 12px 10px;
+    line-height: 1em;
+}
+
+.link-settings__item:hover {
+    cursor: pointer;
+    flex: 1 0 auto;
+    background: rgba(7, 99, 135, 0.11);
+}

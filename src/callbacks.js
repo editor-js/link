@@ -1,8 +1,8 @@
 module.exports = ( function () {
 
-    function URLPasted (event) {
+    function URLPasted(event) {
 
-        var input = this,
+        let input = this,
             clipboardData,
             pastedURL;
 
@@ -15,7 +15,7 @@ module.exports = ( function () {
          * Use editors API
          */
         codex.editor.core.ajax({
-            url : '/fetchURL?url=' + pastedURL,
+            url : core.config.fetchURL + '?url=' + pastedURL,
             type : 'GET',
             beforeSend : beforeSend.bind(input),
             success : success.bind(input),
@@ -24,12 +24,12 @@ module.exports = ( function () {
 
     }
 
-    function beforeSend () {
+    function beforeSend() {
 
-        var input = this,
+        let input = this,
             intervalID;
 
-        input.value = "Обрабатывается";
+        input.value = 'Обрабатывается';
         input.disabled = true;
 
         intervalID = setInterval( function () {
@@ -43,19 +43,20 @@ module.exports = ( function () {
             clearInterval(intervalID);
 
         }, 1200);
-    }
-
-    function success (result) {
-
-        var parsedJSON = JSON.parse(result),
-            input = this,
-            embed = ui.drawEmbedWithStyleTwo(parsedJSON);
-
-        input.replaceWith(embed);
 
     }
 
-    function error (result) {
+    function success(result) {
+
+        let currentBlock = codex.editor.content.currentNode,
+            parsedJSON = JSON.parse(result),
+            embed = ui.drawEmbedWithMiniature(parsedJSON);
+
+        codex.editor.content.switchBlock(currentBlock, embed);
+
+    }
+
+    function error(result) {
 
     }
 
@@ -66,3 +67,4 @@ module.exports = ( function () {
 })();
 
 var ui = require('./ui');
+var core = require('./core');

@@ -71,64 +71,98 @@ var cdxEditorLink =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = ( function () {
+"use strict";
+
+
+/**
+ * Codex Editor Link plugin
+ * @type {Object}
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * @description Module contains of interface methods
+ *
+ */
+
+module.exports = function () {
+
+    'use strict';
+
+    /**
+     * Css classes
+     * @type {Object}
+     */
 
     var css = {
 
-        linkHolder : 'link-holder',
-        holderWithMiniature : 'link-holder--miniature',
-        holderWithCover : 'link-holder--cover',
-        inputElement : 'link-holder__input',
-        parsedURLImageMiniatured : 'link-holder__image--miniatured',
-        parsedURLImageCovered : 'link-holder__image--covered',
-        leftColumnMiniature : 'left-column--miniature',
-        leftColumnCover : 'left-column--cover',
-        parsedDescription : 'left-column__description',
-        link : 'left-column__anchor',
-        linkSettings : 'link-settings',
-        linkSettingsItem : 'link-settings__item'
+        linkHolder: 'link-holder',
+        holderWithMiniature: 'link-holder--miniature',
+        holderWithCover: 'link-holder--cover',
+        inputElement: 'link-holder__input',
+        parsedURLImageMiniatured: 'link-holder__image--miniatured',
+        parsedURLImageCovered: 'link-holder__image--covered',
+        leftColumnMiniature: 'left-column--miniature',
+        leftColumnCover: 'left-column--cover',
+        parsedDescription: 'left-column__description',
+        link: 'left-column__anchor',
+        linkSettings: 'link-settings',
+        linkSettingsItem: 'link-settings__item'
 
     };
 
-    var linkHolder = null;
+    __webpack_require__(6);
 
-    function drawInput () {
+    /**
+     * Returns input DOM Element
+     * @returns {Element}
+     *
+     * @protected
+     */
+    function drawInput() {
 
         var inputElement = document.createElement('INPUT');
+
         inputElement.type = 'input';
         inputElement.classList.add(css.inputElement);
         inputElement.placeholder = 'Вставьте ссылку';
 
         return inputElement;
-
     }
 
-    function drawLinkHolder () {
+    /**
+     * Returns input holder
+     * @returns {Element}
+     *
+     * @protected
+     */
+    function drawLinkHolder() {
 
-        var holder = document.createElement('DIV'),
-            inputElement = drawInput();
+        var holder = document.createElement('DIV');
 
         holder.classList.add(css.linkHolder);
-        holder.appendChild(inputElement);
-
-        linkHolder = holder;
-
-        inputElement.addEventListener('paste', callbacks.URLPasted.bind(inputElement));
 
         return holder;
-
     }
 
-    function drawEmbedWithStyleOne (data) {
+    /**
+     * Returns embed interface with small picture
+     *
+     * @param data {Object} - Server response
+     * @returns {Element}
+     *
+     * @protected
+     */
+    function drawEmbedWithMiniature(data) {
 
-        var holder = document.createDocumentFragment(),
+        var linkHolder = drawLinkHolder(),
             leftColumn = document.createElement('DIV'),
             title = document.createElement('H3'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
-            link = document.createElement('A');
+            anchor = document.createElement('A');
 
         linkHolder.classList.add(css.holderWithMiniature);
+        linkHolder.dataset.style = 'miniature';
 
         title.textContent = data.title;
 
@@ -138,31 +172,40 @@ module.exports = ( function () {
         image.src = data.image;
         image.classList.add(css.parsedURLImageMiniatured);
 
-        link.textContent = data.linkText;
-        link.href = data.linkUrl;
-        link.classList.add(css.link);
+        anchor.textContent = data.linkText;
+        anchor.href = data.linkUrl;
+        anchor.classList.add(css.link);
 
         leftColumn.classList.add(css.leftColumnMiniature);
         leftColumn.appendChild(title);
         leftColumn.appendChild(description);
-        leftColumn.appendChild(link);
+        leftColumn.appendChild(anchor);
 
-        holder.appendChild(image);
-        holder.appendChild(leftColumn);
+        linkHolder.appendChild(image);
+        linkHolder.appendChild(leftColumn);
 
-        return holder;
+        return linkHolder;
     }
 
-    function drawEmbedWithStyleTwo (data) {
+    /**
+     * Returns embed interface with cover
+     *
+     * @param data
+     * @returns {DocumentFragment}
+     *
+     * @protected
+     */
+    function drawEmbedWithCover(data) {
 
-        var holder = document.createDocumentFragment(),
+        var linkHolder = drawLinkHolder(),
             title = document.createElement('H2'),
             leftColumn = document.createElement('DIV'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
-            link = document.createElement('A');
+            anchor = document.createElement('A');
 
         linkHolder.classList.add(css.holderWithCover);
+        linkHolder.dataset.style = 'cover';
 
         title.textContent = data.title;
 
@@ -172,51 +215,66 @@ module.exports = ( function () {
         image.src = data.image;
         image.classList.add(css.parsedURLImageCovered);
 
-        link.textContent = data.linkText;
-        link.href = data.linkUrl;
+        anchor.textContent = data.linkText;
+        anchor.href = data.linkUrl;
 
         leftColumn.classList.add(css.leftColumnCover);
         leftColumn.appendChild(title);
         leftColumn.appendChild(description);
-        leftColumn.appendChild(link);
+        leftColumn.appendChild(anchor);
 
-        holder.appendChild(image);
-        holder.appendChild(leftColumn);
+        linkHolder.appendChild(image);
+        linkHolder.appendChild(leftColumn);
 
-        return holder;
-
+        return linkHolder;
     }
 
-    function drawSettingsHolder () {
+    function drawSettingsHolder() {
 
         var holder = document.createElement('DIV');
+
         holder.classList.add(css.linkSettings);
         return holder;
-
     }
 
-    function drawSettingsItem (itemTypes, item) {
+    function drawSettingsItem(itemTypes, item) {
 
         var settingsItem = document.createElement('SPAN');
+
         settingsItem.textContent = itemTypes[item];
         settingsItem.classList.add(css.linkSettingsItem);
 
         return settingsItem;
+    }
 
+    function getDataFromHTML() {
+
+        var content = codex.editor.content.currentNode,
+            linkHolder = content.querySelector('.' + css.linkHolder),
+            image = content.querySelector('IMG'),
+            description = content.querySelector('.' + css.parsedDescription),
+            link = content.querySelector('.' + css.link),
+            outputData = {};
+
+        outputData.style = linkHolder.dataset.style;
+        outputData.image = image.src;
+        outputData.description = description.innerHTML;
+        outputData.linkText = link.innerHTML;
+        outputData.linkUrl = link.href;
+
+        return outputData;
     }
 
     return {
-        linkHolder,
-        drawInput,
-        drawLinkHolder,
-        drawEmbedWithStyleOne,
-        drawEmbedWithStyleTwo,
-        drawSettingsHolder,
-        drawSettingsItem
-    }
-
-
-})();
+        drawInput: drawInput,
+        drawLinkHolder: drawLinkHolder,
+        drawEmbedWithMiniature: drawEmbedWithMiniature,
+        drawEmbedWithCover: drawEmbedWithCover,
+        drawSettingsHolder: drawSettingsHolder,
+        drawSettingsItem: drawSettingsItem,
+        getDataFromHTML: getDataFromHTML
+    };
+}();
 
 var callbacks = __webpack_require__(4);
 
@@ -224,71 +282,101 @@ var callbacks = __webpack_require__(4);
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = ( function () {
+"use strict";
 
-    function make_ (data) {
 
-        var holder;
+module.exports = function () {
+
+    function make_(data) {
+
+        var holder = void 0;
 
         if (data && data.style) {
 
-            holder = ui.drawEmbedWithStyleOne(data);
-
+            switch (data.style) {
+                case 'miniature':
+                    holder = ui.drawEmbedWithMiniature(data);
+                    break;
+                case 'cover':
+                    holder = ui.drawEmbedWithCover(data);
+                    break;
+            }
         } else {
 
-            holder = ui.drawLinkHolder();
+            var inputElement = void 0;
 
+            holder = ui.drawLinkHolder();
+            inputElement = ui.drawInput();
+
+            inputElement.addEventListener('paste', callbacks.URLPasted.bind(inputElement));
+
+            holder.appendChild(inputElement);
         }
 
         return holder;
-
     }
 
-    function render (data) {
+    function render(data) {
 
-        return make_ (data);
-
+        return make_(data);
     }
 
     return render;
-
-})();
+}();
 
 var ui = __webpack_require__(0);
+var callbacks = __webpack_require__(4);
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = ( function () {
+"use strict";
 
-    function saveData (blockContent) {
+
+module.exports = function () {
+
+    function saveData(blockContent) {
 
         console.log(blockContent);
-
     }
 
-    return saveData
-
-})();
+    return saveData;
+}();
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = ( function () {
+"use strict";
 
-    function makeSettings () {
+
+/**
+ * Codex Editor Link plugin
+ *
+ * @author Codex Team
+ *
+ * @description Provides settings interface
+ */
+module.exports = function () {
+
+    /**
+     * Main function that draws settings interface
+     * @protected
+     * @returns {*}
+     */
+    function makeSettings() {
 
         var holder = ui.drawSettingsHolder(),
             types = {
-                miniature : 'Без обложки',
-                cover : 'С обложкой'
-            };
+            miniature: 'Без обложки',
+            cover: 'С обложкой'
+        };
 
         for (var type in types) {
 
             var settingsItem = ui.drawSettingsItem(types, type);
+
             holder.appendChild(settingsItem);
 
             settingsItem.dataset.style = type;
@@ -296,24 +384,47 @@ module.exports = ( function () {
         }
 
         return holder;
-
     }
 
-    function handleSettingItems () {
+    /**
+     * @private
+     */
+    function handleSettingItems() {
+
+        var currentBlock = codex.editor.content.currentNode;
 
         switch (this.dataset.style) {
             case 'miniature':
+                switchToMiniaturedEmbed(currentBlock);
                 break;
             case 'cover':
-                console.log('coer');
+                switchToCoveredEmbed(currentBlock);
                 break;
         }
+    }
 
+    function switchToMiniaturedEmbed(currentBlock) {
+
+        var data = ui.getDataFromHTML(),
+            newEmbed = void 0;
+
+        data.style = 'miniature';
+        newEmbed = render(data);
+        codex.editor.content.switchBlock(currentBlock, newEmbed);
+    }
+
+    function switchToCoveredEmbed(currentBlock) {
+
+        var data = ui.getDataFromHTML(),
+            newEmbed = void 0;
+
+        data.style = 'cover';
+        newEmbed = render(data);
+        codex.editor.content.switchBlock(currentBlock, newEmbed);
     }
 
     return makeSettings;
-
-})();
+}();
 
 var ui = __webpack_require__(0);
 var render = __webpack_require__(1);
@@ -322,13 +433,16 @@ var render = __webpack_require__(1);
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = ( function () {
+"use strict";
 
-    function URLPasted (event) {
+
+module.exports = function () {
+
+    function URLPasted(event) {
 
         var input = this,
-            clipboardData,
-            pastedURL;
+            clipboardData = void 0,
+            pastedURL = void 0;
 
         event.preventDefault();
 
@@ -339,76 +453,122 @@ module.exports = ( function () {
          * Use editors API
          */
         codex.editor.core.ajax({
-            url : '/fetchURL?url=' + pastedURL,
-            type : 'GET',
-            beforeSend : beforeSend.bind(input),
-            success : success.bind(input),
-            error : error.bind(input)
+            url: core.config.fetchURL + '?url=' + pastedURL,
+            type: 'GET',
+            beforeSend: beforeSend.bind(input),
+            success: success.bind(input),
+            error: error.bind(input)
         });
-
     }
 
-    function beforeSend () {
+    function beforeSend() {
 
         var input = this,
-            intervalID;
+            intervalID = void 0;
 
-        input.value = "Обрабатывается";
+        input.value = 'Обрабатывается';
         input.disabled = true;
 
-        intervalID = setInterval( function () {
+        intervalID = setInterval(function () {
 
             input.value += '.';
-
         }, 400);
 
-        setTimeout( function () {
+        setTimeout(function () {
 
             clearInterval(intervalID);
-
         }, 1200);
     }
 
-    function success (result) {
+    function success(result) {
 
-        var parsedJSON = JSON.parse(result),
-            input = this,
-            embed = ui.drawEmbedWithStyleTwo(parsedJSON);
+        var currentBlock = codex.editor.content.currentNode,
+            parsedJSON = JSON.parse(result),
+            embed = ui.drawEmbedWithMiniature(parsedJSON);
 
-        input.replaceWith(embed);
-
+        codex.editor.content.switchBlock(currentBlock, embed);
     }
 
-    function error (result) {
-
-    }
+    function error(result) {}
 
     return {
-        URLPasted
+        URLPasted: URLPasted
     };
-
-})();
+}();
 
 var ui = __webpack_require__(0);
+var core = __webpack_require__(7);
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
 
-module.exports = (function (){
+
+/**
+ * Codex Editor Link plugin
+ *
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * @description Provides render, saver, settings submodules
+ *
+ * @type {{render, save, settings}}
+ */
+module.exports = function () {
 
     var render = __webpack_require__(1);
     var saver = __webpack_require__(2);
     var settings = __webpack_require__(3);
+    var core = __webpack_require__(7);
 
     return {
-        render : render,
-        save : saver,
-        settings : settings
-    }
+        prepare: core.prepare,
+        render: render,
+        save: saver,
+        settings: settings
+    };
+}();
 
-})();
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (core) {
+
+    core.config = null;
+
+    core.prepare = function (customConfiguration) {
+
+        return new Promise(function (resolve, reject) {
+
+            if ((typeof customConfiguration === 'undefined' ? 'undefined' : _typeof(customConfiguration)) === 'object' && customConfiguration.fetchURL) {
+
+                // set custom configuration
+                core.config = customConfiguration;
+
+                resolve();
+            } else {
+
+                reject('Cant initialize plugin without fetch server');
+            }
+        });
+    };
+
+    return core;
+}({});
 
 /***/ })
 /******/ ]);

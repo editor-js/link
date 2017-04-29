@@ -1,6 +1,22 @@
+/**
+ * Codex Editor Link plugin
+ * @type {Object}
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * @description Module contains of interface methods
+ *
+ */
+
 module.exports = ( function () {
 
-    var css = {
+    'use strict';
+
+    /**
+     * Css classes
+     * @type {Object}
+     */
+    let css = {
 
         linkHolder : 'link-holder',
         holderWithMiniature : 'link-holder--miniature',
@@ -17,11 +33,18 @@ module.exports = ( function () {
 
     };
 
-    var linkHolder = null;
+    require('./css/style.css');
 
-    function drawInput () {
+    /**
+     * Returns input DOM Element
+     * @returns {Element}
+     *
+     * @protected
+     */
+    function drawInput() {
 
-        var inputElement = document.createElement('INPUT');
+        let inputElement = document.createElement('INPUT');
+
         inputElement.type = 'input';
         inputElement.classList.add(css.inputElement);
         inputElement.placeholder = 'Вставьте ссылку';
@@ -30,32 +53,41 @@ module.exports = ( function () {
 
     }
 
-    function drawLinkHolder () {
+    /**
+     * Returns input holder
+     * @returns {Element}
+     *
+     * @protected
+     */
+    function drawLinkHolder() {
 
-        var holder = document.createElement('DIV'),
-            inputElement = drawInput();
+        let holder = document.createElement('DIV');
 
         holder.classList.add(css.linkHolder);
-        holder.appendChild(inputElement);
-
-        linkHolder = holder;
-
-        inputElement.addEventListener('paste', callbacks.URLPasted.bind(inputElement));
 
         return holder;
 
     }
 
-    function drawEmbedWithStyleOne (data) {
+    /**
+     * Returns embed interface with small picture
+     *
+     * @param data {Object} - Server response
+     * @returns {Element}
+     *
+     * @protected
+     */
+    function drawEmbedWithMiniature(data) {
 
-        var holder = document.createDocumentFragment(),
+        let linkHolder = drawLinkHolder(),
             leftColumn = document.createElement('DIV'),
             title = document.createElement('H3'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
-            link = document.createElement('A');
+            anchor = document.createElement('A');
 
         linkHolder.classList.add(css.holderWithMiniature);
+        linkHolder.dataset.style = 'miniature';
 
         title.textContent = data.title;
 
@@ -65,31 +97,41 @@ module.exports = ( function () {
         image.src = data.image;
         image.classList.add(css.parsedURLImageMiniatured);
 
-        link.textContent = data.linkText;
-        link.href = data.linkUrl;
-        link.classList.add(css.link);
+        anchor.textContent = data.linkText;
+        anchor.href = data.linkUrl;
+        anchor.classList.add(css.link);
 
         leftColumn.classList.add(css.leftColumnMiniature);
         leftColumn.appendChild(title);
         leftColumn.appendChild(description);
-        leftColumn.appendChild(link);
+        leftColumn.appendChild(anchor);
 
-        holder.appendChild(image);
-        holder.appendChild(leftColumn);
+        linkHolder.appendChild(image);
+        linkHolder.appendChild(leftColumn);
 
-        return holder;
+        return linkHolder;
+
     }
 
-    function drawEmbedWithStyleTwo (data) {
+    /**
+     * Returns embed interface with cover
+     *
+     * @param data
+     * @returns {DocumentFragment}
+     *
+     * @protected
+     */
+    function drawEmbedWithCover(data) {
 
-        var holder = document.createDocumentFragment(),
+        let linkHolder = drawLinkHolder(),
             title = document.createElement('H2'),
             leftColumn = document.createElement('DIV'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
-            link = document.createElement('A');
+            anchor = document.createElement('A');
 
         linkHolder.classList.add(css.holderWithCover);
+        linkHolder.dataset.style = 'cover';
 
         title.textContent = data.title;
 
@@ -99,32 +141,34 @@ module.exports = ( function () {
         image.src = data.image;
         image.classList.add(css.parsedURLImageCovered);
 
-        link.textContent = data.linkText;
-        link.href = data.linkUrl;
+        anchor.textContent = data.linkText;
+        anchor.href = data.linkUrl;
 
         leftColumn.classList.add(css.leftColumnCover);
         leftColumn.appendChild(title);
         leftColumn.appendChild(description);
-        leftColumn.appendChild(link);
+        leftColumn.appendChild(anchor);
 
-        holder.appendChild(image);
-        holder.appendChild(leftColumn);
+        linkHolder.appendChild(image);
+        linkHolder.appendChild(leftColumn);
 
-        return holder;
+        return linkHolder;
 
     }
 
-    function drawSettingsHolder () {
+    function drawSettingsHolder() {
 
-        var holder = document.createElement('DIV');
+        let holder = document.createElement('DIV');
+
         holder.classList.add(css.linkSettings);
         return holder;
 
     }
 
-    function drawSettingsItem (itemTypes, item) {
+    function drawSettingsItem(itemTypes, item) {
 
-        var settingsItem = document.createElement('SPAN');
+        let settingsItem = document.createElement('SPAN');
+
         settingsItem.textContent = itemTypes[item];
         settingsItem.classList.add(css.linkSettingsItem);
 
@@ -132,15 +176,34 @@ module.exports = ( function () {
 
     }
 
+    function getDataFromHTML () {
+
+        let content = codex.editor.content.currentNode,
+            linkHolder = content.querySelector('.' + css.linkHolder),
+            image = content.querySelector('IMG'),
+            description = content.querySelector('.' + css.parsedDescription),
+            link = content.querySelector('.' + css.link),
+            outputData = {};
+
+
+        outputData.style = linkHolder.dataset.style;
+        outputData.image = image.src;
+        outputData.description = description.innerHTML;
+        outputData.linkText = link.innerHTML;
+        outputData.linkUrl = link.href;
+
+        return outputData;
+    }
+
     return {
-        linkHolder,
         drawInput,
         drawLinkHolder,
-        drawEmbedWithStyleOne,
-        drawEmbedWithStyleTwo,
+        drawEmbedWithMiniature,
+        drawEmbedWithCover,
         drawSettingsHolder,
-        drawSettingsItem
-    }
+        drawSettingsItem,
+        getDataFromHTML
+    };
 
 
 })();
