@@ -365,13 +365,57 @@ var callbacks = __webpack_require__(4);
 
 module.exports = function () {
 
+    function validate() {}
+
+    function prepareDataForSave(data) {
+
+        var clearAll = {
+            tags: {}
+        },
+            allowedTagsForTitle = {
+            tags: {
+                p: {}
+            }
+        },
+            allowedTagsForDescription = {
+            tags: {
+                p: {},
+                a: {
+                    href: true,
+                    target: '_blank',
+                    rel: 'nofollow'
+                },
+                b: {},
+                i: {}
+            }
+        };
+
+        if (data.style !== 'bigCover' || data.style !== 'smallCover') {
+
+            // set default style
+            data.style = 'smallCover';
+        }
+
+        data.title = codex.editor.sanitizer.clean(data.title, allowedTagsForTitle);
+        data.description = codex.editor.sanitizer.clean(data.description, allowedTagsForDescription);
+        data.linkText = codex.editor.sanitizer.clean(data.linkText, clearAll);
+        data.linkUrl = codex.editor.sanitizer.clean(data.linkUrl, clearAll);
+        data.image = codex.editor.sanitizer.clean(data.image, clearAll);
+
+        return data;
+    }
+
     function saveData(blockContent) {
 
-        console.log(blockContent);
+        var outputData = ui.getDataFromHTML();
+
+        return prepareDataForSave(outputData);
     }
 
     return saveData;
 }();
+
+var ui = __webpack_require__(0);
 
 /***/ }),
 /* 3 */
