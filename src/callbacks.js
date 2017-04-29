@@ -1,5 +1,19 @@
+/**
+ * Codex Editor Link plugin
+ *
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * @type {{URLPasted}}
+ */
 module.exports = ( function () {
 
+    /**
+     * handles paste event.
+     *
+     * @param event
+     * @protected
+     */
     function URLPasted(event) {
 
         let input = this,
@@ -24,6 +38,10 @@ module.exports = ( function () {
 
     }
 
+    /**
+     * BeforeSend callbacks.
+     * @private
+     */
     function beforeSend() {
 
         let input = this,
@@ -46,17 +64,37 @@ module.exports = ( function () {
 
     }
 
+    /**
+     * Success callback
+     * @private
+     * @param result
+     *
+     * @description uses Editor's core API
+     */
     function success(result) {
 
         let currentBlock = codex.editor.content.currentNode,
             parsedJSON = JSON.parse(result),
-            embed = ui.drawEmbedWithMiniature(parsedJSON);
+            embed;
 
+        parsedJSON.style = core.config.defaultStyle;
+        embed = render(parsedJSON);
+
+        /**
+         * Editor's content module API
+         */
         codex.editor.content.switchBlock(currentBlock, embed);
 
     }
 
+    /**
+     * Error handler
+     * @private
+     * @param result
+     */
     function error(result) {
+
+        // error handler. Add red borders to input
 
     }
 
@@ -68,3 +106,4 @@ module.exports = ( function () {
 
 var ui = require('./ui');
 var core = require('./core');
+var render = require('./render');

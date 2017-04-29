@@ -1,3 +1,11 @@
+/**
+ * Codex Editor Link plugin
+ *
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * Makes HTML from JSON
+ */
 module.exports = ( function () {
 
     function make_(data) {
@@ -7,11 +15,11 @@ module.exports = ( function () {
         if (data && data.style) {
 
             switch (data.style) {
-                case 'miniature':
-                    holder = ui.drawEmbedWithMiniature(data);
+                case 'smallCover':
+                    holder = ui.drawEmbedWithSmallCover(data);
                     break;
-                case 'cover':
-                    holder = ui.drawEmbedWithCover(data);
+                case 'bigCover':
+                    holder = ui.drawEmbedWithBigCover(data);
                     break;
             }
 

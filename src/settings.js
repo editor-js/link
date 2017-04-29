@@ -4,6 +4,8 @@
  * @author Codex Team
  *
  * @description Provides settings interface
+ *
+ * @return {Function}
  */
 module.exports = ( function () {
 
@@ -16,8 +18,8 @@ module.exports = ( function () {
 
         let holder = ui.drawSettingsHolder(),
             types = {
-                miniature : 'Без обложки',
-                cover : 'С обложкой'
+                smallCover : 'Маленькая обложка',
+                bigCover : 'Большая обложка'
             };
 
         for (let type in types) {
@@ -37,40 +39,65 @@ module.exports = ( function () {
 
     /**
      * @private
+     * @description uses Editors Core API
      */
     function handleSettingItems() {
 
         let currentBlock = codex.editor.content.currentNode;
 
         switch (this.dataset.style) {
-            case 'miniature':
-                switchToMiniaturedEmbed(currentBlock);
+            case 'smallCover':
+                switchToSmallCover(currentBlock);
                 break;
-            case 'cover':
-                switchToCoveredEmbed(currentBlock);
+            case 'bigCover':
+                switchToBigCover(currentBlock);
                 break;
         }
 
+        /**
+         * Use Codex Editor API to close settings
+         */
+        codex.editor.toolbar.settings.close();
     }
 
-    function switchToMiniaturedEmbed (currentBlock) {
+    /**
+     * Switches to small covered embed
+     * @private
+     * @param currentBlock
+     *
+     * @description uses Editors Core API
+     */
+    function switchToSmallCover (currentBlock) {
 
         let data = ui.getDataFromHTML(),
             newEmbed;
 
-        data.style = 'miniature';
+        data.style = 'smallCover';
         newEmbed = render(data);
+
+        /**
+         * Editor's content module API
+         */
         codex.editor.content.switchBlock(currentBlock, newEmbed);
 
     }
 
-    function switchToCoveredEmbed (currentBlock) {
+    /**
+     * Switches to big covered embed
+     * @private
+     * @param currentBlock
+     */
+    function switchToBigCover (currentBlock) {
 
         let data = ui.getDataFromHTML(),
             newEmbed;
 
-        data.style = 'cover';
+        data.style = 'bigCover';
         newEmbed = render(data);
+
+        /**
+         * Editor's content module API
+         */
         codex.editor.content.switchBlock(currentBlock, newEmbed);
 
     }

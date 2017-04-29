@@ -96,15 +96,18 @@ module.exports = function () {
     var css = {
 
         linkHolder: 'link-holder',
-        holderWithMiniature: 'link-holder--miniature',
-        holderWithCover: 'link-holder--cover',
+        holderWithSmallCover: 'link-holder--small-cover',
+        holderWithBigCover: 'link-holder--big-cover',
+        contentWrapper: 'link-holder-wrapper',
+        embedTitle: 'link-holder__title',
+        cover: 'link-holder__cover',
+        smallCover: 'link-holder__cover--small',
+        bigCover: 'link-holder__cover--big',
+        description: 'link-holder__description',
+        anchor: 'link-holder__anchor',
+
         inputElement: 'link-holder__input',
-        parsedURLImageMiniatured: 'link-holder__image--miniatured',
-        parsedURLImageCovered: 'link-holder__image--covered',
-        leftColumnMiniature: 'left-column--miniature',
-        leftColumnCover: 'left-column--cover',
-        parsedDescription: 'left-column__description',
-        link: 'left-column__anchor',
+
         linkSettings: 'link-settings',
         linkSettingsItem: 'link-settings__item'
 
@@ -145,90 +148,95 @@ module.exports = function () {
     }
 
     /**
-     * Returns embed interface with small picture
+     * Returns embed interface with small cover
      *
      * @param data {Object} - Server response
      * @returns {Element}
      *
      * @protected
      */
-    function drawEmbedWithMiniature(data) {
+    function drawEmbedWithSmallCover(data) {
 
         var linkHolder = drawLinkHolder(),
-            leftColumn = document.createElement('DIV'),
-            title = document.createElement('H3'),
+            title = document.createElement('DIV'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
-        linkHolder.classList.add(css.holderWithMiniature);
-        linkHolder.dataset.style = 'miniature';
-
-        title.textContent = data.title;
-
-        description.textContent = data.description;
-        description.classList.add(css.parsedDescription);
+        linkHolder.classList.add(css.linkHolder, css.holderWithSmallCover);
+        linkHolder.dataset.style = 'smallCover';
 
         image.src = data.image;
-        image.classList.add(css.parsedURLImageMiniatured);
+        image.classList.add(css.cover, css.smallCover);
+
+        title.textContent = data.title;
+        title.classList.add(css.embedTitle);
+
+        description.textContent = data.description;
+        description.classList.add(css.description);
 
         anchor.textContent = data.linkText;
         anchor.href = data.linkUrl;
-        anchor.classList.add(css.link);
-
-        leftColumn.classList.add(css.leftColumnMiniature);
-        leftColumn.appendChild(title);
-        leftColumn.appendChild(description);
-        leftColumn.appendChild(anchor);
+        anchor.classList.add(css.anchor);
 
         linkHolder.appendChild(image);
-        linkHolder.appendChild(leftColumn);
+        linkHolder.appendChild(title);
+        linkHolder.appendChild(description);
+        linkHolder.appendChild(anchor);
 
         return linkHolder;
     }
 
     /**
-     * Returns embed interface with cover
+     * Returns embed interface with big cover
      *
      * @param data
      * @returns {DocumentFragment}
      *
      * @protected
      */
-    function drawEmbedWithCover(data) {
+    function drawEmbedWithBigCover(data) {
 
         var linkHolder = drawLinkHolder(),
-            title = document.createElement('H2'),
-            leftColumn = document.createElement('DIV'),
             image = document.createElement('IMG'),
+            title = document.createElement('DIV'),
+            wrapper = document.createElement('DIV'),
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
-        linkHolder.classList.add(css.holderWithCover);
-        linkHolder.dataset.style = 'cover';
-
-        title.textContent = data.title;
-
-        description.textContent = data.description;
-        description.classList.add(css.parsedDescription);
+        linkHolder.classList.add(css.linkHolder, css.holderWithBigCover);
+        linkHolder.dataset.style = 'bigCover';
 
         image.src = data.image;
-        image.classList.add(css.parsedURLImageCovered);
+        image.classList.add(css.cover, css.bigCover);
+
+        title.textContent = data.title;
+        title.classList.add(css.embedTitle);
+
+        description.textContent = data.description;
+        description.classList.add(css.description);
 
         anchor.textContent = data.linkText;
         anchor.href = data.linkUrl;
+        anchor.classList.add(css.anchor);
 
-        leftColumn.classList.add(css.leftColumnCover);
-        leftColumn.appendChild(title);
-        leftColumn.appendChild(description);
-        leftColumn.appendChild(anchor);
+        wrapper.classList.add(css.contentWrapper);
+        wrapper.appendChild(title);
+        wrapper.appendChild(description);
+        wrapper.appendChild(anchor);
 
         linkHolder.appendChild(image);
-        linkHolder.appendChild(leftColumn);
+        linkHolder.appendChild(wrapper);
 
         return linkHolder;
     }
 
+    /**
+     * Draws settings holder
+     * @protected
+     *
+     * @returns {Element}
+     */
     function drawSettingsHolder() {
 
         var holder = document.createElement('DIV');
@@ -237,6 +245,14 @@ module.exports = function () {
         return holder;
     }
 
+    /**
+     * @protected
+     *
+     * @param itemTypes
+     * @param item
+     *
+     * @returns {Element}
+     */
     function drawSettingsItem(itemTypes, item) {
 
         var settingsItem = document.createElement('SPAN');
@@ -247,17 +263,24 @@ module.exports = function () {
         return settingsItem;
     }
 
+    /**
+     * Returns data object contains of embed information
+     * @protected
+     * @returns {{}}
+     */
     function getDataFromHTML() {
 
         var content = codex.editor.content.currentNode,
             linkHolder = content.querySelector('.' + css.linkHolder),
-            image = content.querySelector('IMG'),
-            description = content.querySelector('.' + css.parsedDescription),
-            link = content.querySelector('.' + css.link),
+            title = content.querySelector('.' + css.embedTitle),
+            image = content.querySelector('.' + css.cover),
+            description = content.querySelector('.' + css.description),
+            link = content.querySelector('.' + css.anchor),
             outputData = {};
 
         outputData.style = linkHolder.dataset.style;
         outputData.image = image.src;
+        outputData.title = title.textContent;
         outputData.description = description.innerHTML;
         outputData.linkText = link.innerHTML;
         outputData.linkUrl = link.href;
@@ -268,15 +291,13 @@ module.exports = function () {
     return {
         drawInput: drawInput,
         drawLinkHolder: drawLinkHolder,
-        drawEmbedWithMiniature: drawEmbedWithMiniature,
-        drawEmbedWithCover: drawEmbedWithCover,
+        drawEmbedWithSmallCover: drawEmbedWithSmallCover,
+        drawEmbedWithBigCover: drawEmbedWithBigCover,
         drawSettingsHolder: drawSettingsHolder,
         drawSettingsItem: drawSettingsItem,
         getDataFromHTML: getDataFromHTML
     };
 }();
-
-var callbacks = __webpack_require__(4);
 
 /***/ }),
 /* 1 */
@@ -285,6 +306,14 @@ var callbacks = __webpack_require__(4);
 "use strict";
 
 
+/**
+ * Codex Editor Link plugin
+ *
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * Makes HTML from JSON
+ */
 module.exports = function () {
 
     function make_(data) {
@@ -294,11 +323,11 @@ module.exports = function () {
         if (data && data.style) {
 
             switch (data.style) {
-                case 'miniature':
-                    holder = ui.drawEmbedWithMiniature(data);
+                case 'smallCover':
+                    holder = ui.drawEmbedWithSmallCover(data);
                     break;
-                case 'cover':
-                    holder = ui.drawEmbedWithCover(data);
+                case 'bigCover':
+                    holder = ui.drawEmbedWithBigCover(data);
                     break;
             }
         } else {
@@ -357,6 +386,8 @@ module.exports = function () {
  * @author Codex Team
  *
  * @description Provides settings interface
+ *
+ * @return {Function}
  */
 module.exports = function () {
 
@@ -369,8 +400,8 @@ module.exports = function () {
 
         var holder = ui.drawSettingsHolder(),
             types = {
-            miniature: 'Без обложки',
-            cover: 'С обложкой'
+            smallCover: 'Маленькая обложка',
+            bigCover: 'Большая обложка'
         };
 
         for (var type in types) {
@@ -388,38 +419,64 @@ module.exports = function () {
 
     /**
      * @private
+     * @description uses Editors Core API
      */
     function handleSettingItems() {
 
         var currentBlock = codex.editor.content.currentNode;
 
         switch (this.dataset.style) {
-            case 'miniature':
-                switchToMiniaturedEmbed(currentBlock);
+            case 'smallCover':
+                switchToSmallCover(currentBlock);
                 break;
-            case 'cover':
-                switchToCoveredEmbed(currentBlock);
+            case 'bigCover':
+                switchToBigCover(currentBlock);
                 break;
         }
+
+        /**
+         * Use Codex Editor API to close settings
+         */
+        codex.editor.toolbar.settings.close();
     }
 
-    function switchToMiniaturedEmbed(currentBlock) {
+    /**
+     * Switches to small covered embed
+     * @private
+     * @param currentBlock
+     *
+     * @description uses Editors Core API
+     */
+    function switchToSmallCover(currentBlock) {
 
         var data = ui.getDataFromHTML(),
             newEmbed = void 0;
 
-        data.style = 'miniature';
+        data.style = 'smallCover';
         newEmbed = render(data);
+
+        /**
+         * Editor's content module API
+         */
         codex.editor.content.switchBlock(currentBlock, newEmbed);
     }
 
-    function switchToCoveredEmbed(currentBlock) {
+    /**
+     * Switches to big covered embed
+     * @private
+     * @param currentBlock
+     */
+    function switchToBigCover(currentBlock) {
 
         var data = ui.getDataFromHTML(),
             newEmbed = void 0;
 
-        data.style = 'cover';
+        data.style = 'bigCover';
         newEmbed = render(data);
+
+        /**
+         * Editor's content module API
+         */
         codex.editor.content.switchBlock(currentBlock, newEmbed);
     }
 
@@ -436,8 +493,22 @@ var render = __webpack_require__(1);
 "use strict";
 
 
+/**
+ * Codex Editor Link plugin
+ *
+ * @author Codex-Team
+ * @version 1.0.0
+ *
+ * @type {{URLPasted}}
+ */
 module.exports = function () {
 
+    /**
+     * handles paste event.
+     *
+     * @param event
+     * @protected
+     */
     function URLPasted(event) {
 
         var input = this,
@@ -461,6 +532,10 @@ module.exports = function () {
         });
     }
 
+    /**
+     * BeforeSend callbacks.
+     * @private
+     */
     function beforeSend() {
 
         var input = this,
@@ -480,16 +555,38 @@ module.exports = function () {
         }, 1200);
     }
 
+    /**
+     * Success callback
+     * @private
+     * @param result
+     *
+     * @description uses Editor's core API
+     */
     function success(result) {
 
         var currentBlock = codex.editor.content.currentNode,
             parsedJSON = JSON.parse(result),
-            embed = ui.drawEmbedWithMiniature(parsedJSON);
+            embed = void 0;
 
+        parsedJSON.style = core.config.defaultStyle;
+        embed = render(parsedJSON);
+
+        /**
+         * Editor's content module API
+         */
         codex.editor.content.switchBlock(currentBlock, embed);
     }
 
-    function error(result) {}
+    /**
+     * Error handler
+     * @private
+     * @param result
+     */
+    function error(result) {
+
+        // error handler. Add red borders to input
+
+    }
 
     return {
         URLPasted: URLPasted
@@ -498,6 +595,7 @@ module.exports = function () {
 
 var ui = __webpack_require__(0);
 var core = __webpack_require__(7);
+var render = __webpack_require__(1);
 
 /***/ }),
 /* 5 */

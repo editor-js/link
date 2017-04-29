@@ -19,15 +19,18 @@ module.exports = ( function () {
     let css = {
 
         linkHolder : 'link-holder',
-        holderWithMiniature : 'link-holder--miniature',
-        holderWithCover : 'link-holder--cover',
+        holderWithSmallCover : 'link-holder--small-cover',
+        holderWithBigCover : 'link-holder--big-cover',
+        contentWrapper : 'link-holder-wrapper',
+        embedTitle : 'link-holder__title',
+        cover : 'link-holder__cover',
+        smallCover : 'link-holder__cover--small',
+        bigCover : 'link-holder__cover--big',
+        description : 'link-holder__description',
+        anchor : 'link-holder__anchor',
+
         inputElement : 'link-holder__input',
-        parsedURLImageMiniatured : 'link-holder__image--miniatured',
-        parsedURLImageCovered : 'link-holder__image--covered',
-        leftColumnMiniature : 'left-column--miniature',
-        leftColumnCover : 'left-column--cover',
-        parsedDescription : 'left-column__description',
-        link : 'left-column__anchor',
+
         linkSettings : 'link-settings',
         linkSettingsItem : 'link-settings__item'
 
@@ -70,92 +73,98 @@ module.exports = ( function () {
     }
 
     /**
-     * Returns embed interface with small picture
+     * Returns embed interface with small cover
      *
      * @param data {Object} - Server response
      * @returns {Element}
      *
      * @protected
      */
-    function drawEmbedWithMiniature(data) {
+    function drawEmbedWithSmallCover(data) {
 
         let linkHolder = drawLinkHolder(),
-            leftColumn = document.createElement('DIV'),
-            title = document.createElement('H3'),
+            title = document.createElement('DIV'),
             image = document.createElement('IMG'),
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
-        linkHolder.classList.add(css.holderWithMiniature);
-        linkHolder.dataset.style = 'miniature';
 
-        title.textContent = data.title;
-
-        description.textContent = data.description;
-        description.classList.add(css.parsedDescription);
+        linkHolder.classList.add(css.linkHolder, css.holderWithSmallCover);
+        linkHolder.dataset.style = 'smallCover';
 
         image.src = data.image;
-        image.classList.add(css.parsedURLImageMiniatured);
+        image.classList.add(css.cover, css.smallCover);
+
+        title.textContent = data.title;
+        title.classList.add(css.embedTitle);
+
+        description.textContent = data.description;
+        description.classList.add(css.description);
 
         anchor.textContent = data.linkText;
         anchor.href = data.linkUrl;
-        anchor.classList.add(css.link);
-
-        leftColumn.classList.add(css.leftColumnMiniature);
-        leftColumn.appendChild(title);
-        leftColumn.appendChild(description);
-        leftColumn.appendChild(anchor);
+        anchor.classList.add(css.anchor);
 
         linkHolder.appendChild(image);
-        linkHolder.appendChild(leftColumn);
+        linkHolder.appendChild(title);
+        linkHolder.appendChild(description);
+        linkHolder.appendChild(anchor);
 
         return linkHolder;
 
     }
 
     /**
-     * Returns embed interface with cover
+     * Returns embed interface with big cover
      *
      * @param data
      * @returns {DocumentFragment}
      *
      * @protected
      */
-    function drawEmbedWithCover(data) {
+    function drawEmbedWithBigCover(data) {
 
         let linkHolder = drawLinkHolder(),
-            title = document.createElement('H2'),
-            leftColumn = document.createElement('DIV'),
             image = document.createElement('IMG'),
+            title = document.createElement('DIV'),
+            wrapper = document.createElement('DIV'),
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
-        linkHolder.classList.add(css.holderWithCover);
-        linkHolder.dataset.style = 'cover';
-
-        title.textContent = data.title;
-
-        description.textContent = data.description;
-        description.classList.add(css.parsedDescription);
+        linkHolder.classList.add(css.linkHolder, css.holderWithBigCover);
+        linkHolder.dataset.style = 'bigCover';
 
         image.src = data.image;
-        image.classList.add(css.parsedURLImageCovered);
+        image.classList.add(css.cover, css.bigCover);
+
+        title.textContent = data.title;
+        title.classList.add(css.embedTitle);
+
+        description.textContent = data.description;
+        description.classList.add(css.description);
 
         anchor.textContent = data.linkText;
         anchor.href = data.linkUrl;
+        anchor.classList.add(css.anchor);
 
-        leftColumn.classList.add(css.leftColumnCover);
-        leftColumn.appendChild(title);
-        leftColumn.appendChild(description);
-        leftColumn.appendChild(anchor);
+        wrapper.classList.add(css.contentWrapper);
+        wrapper.appendChild(title);
+        wrapper.appendChild(description);
+        wrapper.appendChild(anchor);
 
         linkHolder.appendChild(image);
-        linkHolder.appendChild(leftColumn);
+        linkHolder.appendChild(wrapper);
 
         return linkHolder;
 
     }
 
+    /**
+     * Draws settings holder
+     * @protected
+     *
+     * @returns {Element}
+     */
     function drawSettingsHolder() {
 
         let holder = document.createElement('DIV');
@@ -165,6 +174,14 @@ module.exports = ( function () {
 
     }
 
+    /**
+     * @protected
+     *
+     * @param itemTypes
+     * @param item
+     *
+     * @returns {Element}
+     */
     function drawSettingsItem(itemTypes, item) {
 
         let settingsItem = document.createElement('SPAN');
@@ -176,18 +193,24 @@ module.exports = ( function () {
 
     }
 
+    /**
+     * Returns data object contains of embed information
+     * @protected
+     * @returns {{}}
+     */
     function getDataFromHTML () {
 
         let content = codex.editor.content.currentNode,
             linkHolder = content.querySelector('.' + css.linkHolder),
-            image = content.querySelector('IMG'),
-            description = content.querySelector('.' + css.parsedDescription),
-            link = content.querySelector('.' + css.link),
+            title = content.querySelector('.' + css.embedTitle),
+            image = content.querySelector('.' + css.cover),
+            description = content.querySelector('.' + css.description),
+            link = content.querySelector('.' + css.anchor),
             outputData = {};
-
 
         outputData.style = linkHolder.dataset.style;
         outputData.image = image.src;
+        outputData.title = title.textContent;
         outputData.description = description.innerHTML;
         outputData.linkText = link.innerHTML;
         outputData.linkUrl = link.href;
@@ -198,8 +221,8 @@ module.exports = ( function () {
     return {
         drawInput,
         drawLinkHolder,
-        drawEmbedWithMiniature,
-        drawEmbedWithCover,
+        drawEmbedWithSmallCover,
+        drawEmbedWithBigCover,
         drawSettingsHolder,
         drawSettingsItem,
         getDataFromHTML
@@ -207,5 +230,3 @@ module.exports = ( function () {
 
 
 })();
-
-var callbacks = require('./callbacks');
