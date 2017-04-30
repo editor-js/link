@@ -19,6 +19,7 @@ module.exports = ( function () {
     let css = {
 
         linkHolder           : 'cdx-link-tool',
+        borderForEmbed       : 'cdx-link-tool--border',
         holderWithSmallCover : 'cdx-link-tool--small-cover',
         holderWithBigCover   : 'cdx-link-tool--big-cover',
         contentWrapper       : 'cdx-link-tool-wrapper',
@@ -93,7 +94,7 @@ module.exports = ( function () {
             anchor = document.createElement('A');
 
 
-        linkHolder.classList.add(css.linkHolder, css.holderWithSmallCover);
+        linkHolder.classList.add(css.linkHolder, css.holderWithSmallCover, css.borderForEmbed);
         linkHolder.dataset.style = 'smallCover';
 
         image.src = data.image;
@@ -135,7 +136,7 @@ module.exports = ( function () {
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
-        linkHolder.classList.add(css.linkHolder, css.holderWithBigCover);
+        linkHolder.classList.add(css.linkHolder, css.holderWithBigCover, css.borderForEmbed);
         linkHolder.dataset.style = 'bigCover';
 
         image.src = data.image;

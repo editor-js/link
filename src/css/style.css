@@ -32,6 +32,10 @@
         overflow: hidden;
     }
 
+    &--border {
+         border: 1px solid #e8e9f1;
+     }
+
     &--small-cover {
         padding: 26px 30px 22px;
     }
