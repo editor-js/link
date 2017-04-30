@@ -1,22 +1,23 @@
 # Link Embed Tool for Codex Editor
 
-This tool allowes to handle get information from pasted link
+This tool provides two interface types of Embeded links
 
 ### Interface examples:
 
-With Big Cover
+##### With Big Cover
 ![alt text](http://i.imgur.com/xBioLve.png "Big cover")
 
 
-With Small Cover
+##### With Small Cover
 ![alt text](http://i.imgur.com/BrW1qGr.png "Small cover")
 
 ---
 
 # Installation
 
-Link Embed plugin extends Codex Editor tools
-There is different ways to use plugin
+Plugin extends Codex Editor tools
+
+There are different ways to use
 
 ### Install via npm
 
@@ -33,6 +34,12 @@ Add script and stylesheet to your HTML page
 <link rel="stylesheet" href="https://raw.githubusercontent.com/codex-editor/link/master/link.css"></link>
 ```
 
+
+### Or clone from Github
+
+```
+https://github.com/codex-editor/link.git
+```
 
 # Usage
 
@@ -60,17 +67,17 @@ link: {
 
 ```defaultStyle``` - this item allows you to choose default embed style. By default it is ```smallCover```
 
-# Backend requirements
+# Data requirements
 
-Plugin wait the following data:
+Plugin waits from server the following data:
 
 ```javascript
 {
-    "image" : imageURL,
-    "title" : embedTitle,
-    "desciption" : embedDescription,
-    "linkText" : link inscription,
-    "linkUrl" : link path
+    "image" : "imageURL",
+    "title" : "embedTitle",
+    "desciption" : "embedDescription",
+    "linkText" : "link inscription",
+    "linkUrl" : "link url"
 }
 ````
 
