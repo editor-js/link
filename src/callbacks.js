@@ -8,6 +8,9 @@
  */
 module.exports = ( function () {
 
+    var intervalID = null;
+    var label = null;
+
     /**
      * handles paste event.
      *
@@ -20,10 +23,11 @@ module.exports = ( function () {
             clipboardData,
             pastedURL;
 
-        event.preventDefault();
-
         clipboardData = event.clipboardData || window.clipboardData;
         pastedURL = clipboardData.getData('Text');
+
+        /** if previous request wasn't successful */
+        input.classList.remove('link-holder__label--error');
 
         /**
          * Use editors API
@@ -45,22 +49,20 @@ module.exports = ( function () {
     function beforeSend() {
 
         let input = this,
-            intervalID;
+            percentage = 15,
+            counter = 1;
 
-        input.value = 'Обрабатывается';
-        input.disabled = true;
+        label = ui.drawProgressLabel();
+        label.style.width = percentage * counter + '%';
 
         intervalID = window.setInterval( function () {
 
-            input.value += '.';
+            counter ++;
+            label.style.width = percentage * counter + '%';
 
         }, 400);
 
-        window.setTimeout( function () {
-
-            window.clearInterval(intervalID);
-
-        }, 1200);
+        input.parentNode.insertBefore(label, input);
 
     }
 
@@ -73,17 +75,30 @@ module.exports = ( function () {
      */
     function success(result) {
 
+        window.clearInterval(intervalID);
+
         let currentBlock = codex.editor.content.currentNode,
-            parsedJSON = JSON.parse(result),
+            parsedJSON,
             embed;
 
-        parsedJSON.style = core.config.defaultStyle;
-        embed = render(parsedJSON);
+        try {
 
-        /**
-         * Editor's content module API
-         */
-        codex.editor.content.switchBlock(currentBlock, embed);
+            parsedJSON = JSON.parse(result);
+            parsedJSON.style = core.config.defaultStyle;
+            embed = render(parsedJSON);
+
+            /**
+             * Editor's content module API
+             */
+            codex.editor.content.switchBlock(currentBlock, embed);
+
+        } catch (e) {
+
+            label.remove();
+            error.call(this);
+
+
+        }
 
     }
 
@@ -94,7 +109,9 @@ module.exports = ( function () {
      */
     function error(result) {
 
-        // error handler. Add red borders to input
+        let input = this;
+
+        input.classList.add('link-holder__label--error');
 
     }
 

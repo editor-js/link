@@ -31,6 +31,9 @@ module.exports = ( function () {
 
         inputElement : 'link-holder__input',
 
+        labelProgress : 'link-holder__label--progress',
+        labelError : 'link-holder__label--error',
+
         linkSettings : 'link-settings',
         linkSettingsItem : 'link-settings__item'
 
@@ -50,7 +53,7 @@ module.exports = ( function () {
 
         inputElement.type = 'input';
         inputElement.classList.add(css.inputElement);
-        inputElement.placeholder = 'Вставьте ссылку';
+        inputElement.placeholder = 'Paste Link...';
 
         return inputElement;
 
@@ -193,6 +196,26 @@ module.exports = ( function () {
 
     }
 
+    function drawProgressLabel() {
+
+        let label = document.createElement('LABEL');
+
+        label.classList.add(css.labelProgress);
+
+        return label;
+
+    }
+
+    function drawErrorLabel() {
+
+        let label = document.createElement('LABEL');
+
+        label.classList.add(css.labelError);
+
+        return label;
+
+    }
+
     /**
      * Returns data object contains of embed information
      * @protected
@@ -221,6 +244,8 @@ module.exports = ( function () {
 
     return {
         drawInput,
+        drawProgressLabel,
+        drawErrorLabel,
         drawLinkHolder,
         drawEmbedWithSmallCover,
         drawEmbedWithBigCover,
