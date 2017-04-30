@@ -198,9 +198,9 @@ module.exports = ( function () {
      * @protected
      * @returns {{}}
      */
-    function getDataFromHTML () {
+    function getDataFromHTML(blockContent) {
 
-        let content = codex.editor.content.currentNode,
+        let content = blockContent || codex.editor.content.currentNode,
             linkHolder = content.querySelector('.' + css.linkHolder),
             title = content.querySelector('.' + css.embedTitle),
             image = content.querySelector('.' + css.cover),
@@ -216,6 +216,7 @@ module.exports = ( function () {
         outputData.linkUrl = link.href;
 
         return outputData;
+
     }
 
     return {

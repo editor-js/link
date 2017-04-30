@@ -1,10 +1,6 @@
 module.exports = ( function () {
 
-    function validate () {
-
-    }
-
-    function prepareDataForSave (data) {
+    function prepareDataForSave(data) {
 
         let clearAll = {
                 tags : {}
@@ -15,16 +11,16 @@ module.exports = ( function () {
                 }
             },
             allowedTagsForDescription = {
-               tags : {
-                   p : {},
-                   a : {
-                       href: true,
-                       target: '_blank',
-                       rel: 'nofollow'
-                   },
-                   b : {},
-                   i : {}
-               }
+                tags : {
+                    p : {},
+                    a : {
+                        href: true,
+                        target: '_blank',
+                        rel: 'nofollow'
+                    },
+                    b : {},
+                    i : {}
+                }
             };
 
 
@@ -42,11 +38,12 @@ module.exports = ( function () {
         data.image = codex.editor.sanitizer.clean(data.image, clearAll);
 
         return data;
+
     }
 
     function saveData(blockContent) {
 
-        let outputData = ui.getDataFromHTML();
+        let outputData = ui.getDataFromHTML(blockContent);
 
         return prepareDataForSave(outputData);
 

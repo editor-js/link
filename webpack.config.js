@@ -36,9 +36,9 @@ module.exports = {
                 },
                 {
                     loader: "eslint-loader",
-                    // options: {
-                    //     fix: true
-                    // }
+                    options: {
+                        fix: true
+                    }
                 }]
             }
         ]
@@ -49,18 +49,18 @@ module.exports = {
         new ExtractTextPlugin({
             filename: 'link.css',
             allChunks: true
-        })
+        }),
 
         /** Uglify JS bundle */
-        // new webpack.optimize.UglifyJsPlugin({
-        //     /** Disable warning messages. Cant disable uglify for 3rd party libs such as html-janitor */
-        //     compress: {
-        //         warnings: false
-        //     }
-        // }),
+        new webpack.optimize.UglifyJsPlugin({
+            /** Disable warning messages. Cant disable uglify for 3rd party libs such as html-janitor */
+            compress: {
+                warnings: false
+            }
+        }),
 
         /** Block biuld if errors found */
-        // new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin()
 
     ],
     watch: true,

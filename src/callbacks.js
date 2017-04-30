@@ -50,15 +50,15 @@ module.exports = ( function () {
         input.value = 'Обрабатывается';
         input.disabled = true;
 
-        intervalID = setInterval( function () {
+        intervalID = window.setInterval( function () {
 
             input.value += '.';
 
         }, 400);
 
-        setTimeout( function () {
+        window.setTimeout( function () {
 
-            clearInterval(intervalID);
+            window.clearInterval(intervalID);
 
         }, 1200);
 

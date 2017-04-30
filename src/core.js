@@ -4,7 +4,7 @@ module.exports = ( function (core) {
 
     core.prepare = function (customConfiguration) {
 
-        return new Promise( function(resolve, reject) {
+        return new Promise( function (resolve, reject) {
 
             if (typeof customConfiguration === 'object' && customConfiguration.fetchURL) {
 

@@ -58,6 +58,7 @@ module.exports = ( function () {
          * Use Codex Editor API to close settings
          */
         codex.editor.toolbar.settings.close();
+
     }
 
     /**
@@ -67,7 +68,7 @@ module.exports = ( function () {
      *
      * @description uses Editors Core API
      */
-    function switchToSmallCover (currentBlock) {
+    function switchToSmallCover(currentBlock) {
 
         let data = ui.getDataFromHTML(),
             newEmbed;
@@ -87,7 +88,7 @@ module.exports = ( function () {
      * @private
      * @param currentBlock
      */
-    function switchToBigCover (currentBlock) {
+    function switchToBigCover(currentBlock) {
 
         let data = ui.getDataFromHTML(),
             newEmbed;
