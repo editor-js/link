@@ -5,11 +5,13 @@ This tool allowes to handle get information from pasted link
 ### Interface examples:
 
 With Big Cover
-![alt text](http://i.imgur.com/tYkGetc.png "Big cover")
+![alt text](http://i.imgur.com/xBioLve.png "Big cover")
 
 
 With Small Cover
 ![alt text](http://i.imgur.com/BrW1qGr.png "Small cover")
+
+---
 
 # Installation
 
@@ -55,6 +57,7 @@ link: {
 ```
 
 ```fetchURL``` - is important data. Plugin won't be initialized is you won't pass it
+
 ```defaultStyle``` - this item allows you to choose default embed style. By default it is ```smallCover```
 
 # Backend requirements
