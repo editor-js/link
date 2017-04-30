@@ -31,7 +31,8 @@ module.exports = ( function () {
 
         inputElement : 'link-holder__input',
 
-        labelProgress : 'link-holder__label--progress',
+        label : 'link-holder__label',
+        labelLoading : 'link-holder__label--loading',
         labelError : 'link-holder__label--error',
 
         linkSettings : 'link-settings',
@@ -196,21 +197,11 @@ module.exports = ( function () {
 
     }
 
-    function drawProgressLabel() {
+    function drawLabel() {
 
         let label = document.createElement('LABEL');
 
-        label.classList.add(css.labelProgress);
-
-        return label;
-
-    }
-
-    function drawErrorLabel() {
-
-        let label = document.createElement('LABEL');
-
-        label.classList.add(css.labelError);
+        label.classList.add(css.label);
 
         return label;
 
@@ -243,9 +234,9 @@ module.exports = ( function () {
     }
 
     return {
+        css,
         drawInput,
-        drawProgressLabel,
-        drawErrorLabel,
+        drawLabel,
         drawLinkHolder,
         drawEmbedWithSmallCover,
         drawEmbedWithBigCover,

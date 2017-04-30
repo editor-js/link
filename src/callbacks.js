@@ -8,9 +8,6 @@
  */
 module.exports = ( function () {
 
-    var intervalID = null;
-    var label = null;
-
     /**
      * handles paste event.
      *
@@ -27,7 +24,7 @@ module.exports = ( function () {
         pastedURL = clipboardData.getData('Text');
 
         /** if previous request wasn't successful */
-        input.classList.remove('link-holder__label--error');
+        input.classList.remove(ui.css.labelError);
 
         /**
          * Use editors API
@@ -36,8 +33,8 @@ module.exports = ( function () {
             url : core.config.fetchURL + '?url=' + pastedURL,
             type : 'GET',
             beforeSend : beforeSend.bind(input),
-            success : success.bind(input),
-            error : error.bind(input)
+            success : success,
+            error : error.bind(input.parentNode)
         });
 
     }
@@ -49,20 +46,17 @@ module.exports = ( function () {
     function beforeSend() {
 
         let input = this,
-            percentage = 15,
-            counter = 1;
-
-        label = ui.drawProgressLabel();
-        label.style.width = percentage * counter + '%';
-
-        intervalID = window.setInterval( function () {
-
-            counter ++;
-            label.style.width = percentage * counter + '%';
-
-        }, 400);
+            label = ui.drawLabel();
 
         input.parentNode.insertBefore(label, input);
+
+        window.setTimeout( function () {
+
+            label.classList.add(ui.css.labelLoading);
+
+        }, 50);
+
+        return input.parentNode;
 
     }
 
@@ -74,8 +68,6 @@ module.exports = ( function () {
      * @description uses Editor's core API
      */
     function success(result) {
-
-        window.clearInterval(intervalID);
 
         let currentBlock = codex.editor.content.currentNode,
             parsedJSON,
@@ -94,9 +86,7 @@ module.exports = ( function () {
 
         } catch (e) {
 
-            label.remove();
             error.call(this);
-
 
         }
 
@@ -109,9 +99,12 @@ module.exports = ( function () {
      */
     function error(result) {
 
-        let input = this;
+        let linkHolder = this,
+            label = linkHolder.querySelector('.' + ui.css.label),
+            input = linkHolder.querySelector('.' + ui.css.inputElement);
 
-        input.classList.add('link-holder__label--error');
+        label.remove();
+        input.classList.add(ui.css.labelError);
 
     }
 

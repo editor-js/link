@@ -18,27 +18,31 @@
 
 .link-holder__input {
     width: 530px;
-    height: 48px;
+    padding: 16px 55px 14px;
     background: #FDFDFD;
     border: 1px solid #E5E6EC;
     box-shadow: inset 0 1px 3px 0 rgba(102,85,107,0.14);
-    border-radius: 5px;
+    border-radius: 3px;
     outline : none;
     font-size: 15px;
     color: #635965;
     letter-spacing: 0;
-    padding-left: 55px;
     background-image: url(../../assets/cdxEditor-link-icon.svg);
     background-repeat: no-repeat;
     background-position: 20px;
 }
 
-.link-holder__label--progress {
+.link-holder__label {
     position: absolute;
     height: 52px;
+    width: 0;
     background-color: #E5E6EC;
     opacity: .4;
-    transition: width .45s ease;
+    transition: width 5s ease;
+}
+
+.link-holder__label--loading {
+    width: 100%;
 }
 
 .link-holder__label--error {
