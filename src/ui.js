@@ -214,8 +214,8 @@ module.exports = ( function () {
      */
     function getDataFromHTML(blockContent) {
 
-        let content = blockContent || codex.editor.content.currentNode,
-            linkHolder = content.querySelector('.' + css.linkHolder),
+        let content = codex.editor.content.currentNode,
+            linkHolder = blockContent || content.querySelector('.' + css.linkHolder),
             title = content.querySelector('.' + css.embedTitle),
             image = content.querySelector('.' + css.cover),
             description = content.querySelector('.' + css.description),
