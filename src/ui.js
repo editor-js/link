@@ -18,25 +18,25 @@ module.exports = ( function () {
      */
     let css = {
 
-        linkHolder : 'link-holder',
-        holderWithSmallCover : 'link-holder--small-cover',
-        holderWithBigCover : 'link-holder--big-cover',
-        contentWrapper : 'link-holder-wrapper',
-        embedTitle : 'link-holder__title',
-        cover : 'link-holder__cover',
-        smallCover : 'link-holder__cover--small',
-        bigCover : 'link-holder__cover--big',
-        description : 'link-holder__description',
-        anchor : 'link-holder__anchor',
+        linkHolder           : 'cdx-link-tool',
+        holderWithSmallCover : 'cdx-link-tool--small-cover',
+        holderWithBigCover   : 'cdx-link-tool--big-cover',
+        contentWrapper       : 'cdx-link-tool-wrapper',
+        embedTitle           : 'cdx-link-tool__title',
+        cover                : 'cdx-link-tool__cover',
+        smallCover           : 'cdx-link-tool__cover--small',
+        bigCover             : 'cdx-link-tool__cover--big',
+        description          : 'cdx-link-tool__description',
+        anchor               : 'cdx-link-tool__anchor',
 
-        inputElement : 'link-holder__input',
+        inputElement         : 'cdx-link-tool__input',
 
-        label : 'link-holder__label',
-        labelLoading : 'link-holder__label--loading',
-        labelError : 'link-holder__label--error',
+        label                : 'cdx-link-tool__label',
+        labelLoading         : 'cdx-link-tool__label--loading',
+        labelError           : 'cdx-link-tool__label--error',
 
-        linkSettings : 'link-settings',
-        linkSettingsItem : 'link-settings__item'
+        linkSettings         : 'link-settings',
+        linkSettingsItem     : 'link-settings__item'
 
     };
 

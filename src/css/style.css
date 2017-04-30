@@ -1,92 +1,129 @@
-.link-holder {
-    position: relative;
-    background: #FDFDFD;
-    border: 1px solid #E5E6EC;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
-    border-radius: 3px;
-    margin: 0.7em 0;
-    overflow: hidden;
-}
+/**
+ * Link Embeded tool for CodeX Editor
+ */
 
-.link-holder--small-cover {
-    padding: 26px 30px 22px 30px;
-}
-
-.link-holder--big-cover {
-    padding: 0;
-}
-
-.link-holder__input {
-    width: 530px;
-    padding: 16px 55px 14px;
-    background: #FDFDFD;
-    border: 1px solid #E5E6EC;
-    box-shadow: inset 0 1px 3px 0 rgba(102,85,107,0.14);
-    border-radius: 3px;
-    outline : none;
-    font-size: 15px;
-    color: #635965;
-    letter-spacing: 0;
-    background-image: url(../../assets/cdxEditor-link-icon.svg);
+/**
+ * Icon
+ * ===========
+ */
+.cdx-link-icon {
+    display: inline-block;
+    width: 14px;
+    height: 32px;
+    background-image: url(../../assets/link.svg);
     background-repeat: no-repeat;
-    background-position: 20px;
+    background-position: center center;
+    background-size: contain;
 }
 
-.link-holder__label {
-    position: absolute;
-    height: 52px;
-    width: 0;
-    background-color: #E5E6EC;
-    opacity: .4;
-    transition: width 5s ease;
+.ce-toolbar__tools li:hover .cdx-link-icon,
+.ce-toolbar__tools .selected .cdx-link-icon {
+    background-image: url(../../assets/link-hover.svg);
 }
 
-.link-holder__label--loading {
-    width: 100%;
+/**
+ * Holder
+ * ===========
+ */
+.cdx-link-tool {
+    & {
+        position: relative;
+        margin: 0.7em 0;
+        overflow: hidden;
+    }
+
+    &--small-cover {
+        padding: 26px 30px 22px;
+    }
+
+    &--big-cover {
+        padding: 0;
+    }
+
+    & input::-moz-placeholder {
+        color: #635965 !important;
+    }
+
+    & input::-webkit-input-placeholder {
+        color: #635965 !important;
+    }
+
+    & input::placeholder {
+        color: #635965 !important;
+    }
+
+    &__input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 15px 15px 15px 55px;
+        background: #fdfdfd;
+        border: 1px solid #e8e9f1;
+        box-shadow: inset 0 1px 3px 0 rgba(102, 85, 107, 0.04);
+        border-radius: 3px;
+        outline: none;
+        font-size: 15px;
+        color: #635965;
+        letter-spacing: 0;
+        background-image: url(../../assets/link-input.svg);
+        background-repeat: no-repeat;
+        background-position: 20px;
+    }
+
+    &__label {
+        position: absolute;
+        height: 52px;
+        width: 0;
+        background-color: #e5e6ec;
+        opacity: 0.4;
+        transition: width 5s ease;
+    }
+
+    &__label--loading {
+        width: 100%;
+    }
+
+    &__label--error {
+        background-image: url(../../assets/link-error.svg);
+        background-color: #fff3f6;
+        border-color: #f3e0e0;
+        color: #a95a5a;
+        box-shadow: inset 0 1px 3px 0 rgba(146, 62, 62, 0.05);
+    }
+
 }
 
-.link-holder__label--error {
-    background-color: #FFF3F6;
-    border: 1px solid #F0D2D2;
-    color : #A95A5A;
-    fill: #A95A5A;
-}
-
-.link-holder__title {
+.cdx-link-tool__title {
     max-width: 350px;
     margin-bottom: 10px;
     font-weight: 500;
     font-size: 16px;
-    color: #1A1E25;
+    color: #1a1e25;
     letter-spacing: 0;
     line-height: 23px;
 }
 
-.link-holder__cover {
-
-}
-.link-holder__cover--small {
+.cdx-link-tool__cover--small {
     width: 70px;
     height: 70px;
     border-radius: 2px;
     float: right;
 }
 
-.link-holder__cover--big {
+.cdx-link-tool__cover--big {
     width: 100%;
     height: 160px;
 }
 
-.link-holder__description {
+.cdx-link-tool__description {
     max-width: 400px;
     margin-bottom: 11px;
     font-size: 14px;
-    color: #1A1E25;
+    color: #1a1e25;
     letter-spacing: 0;
     line-height: 20px;
 }
 
-.link-holder__anchor {
+.cdx-link-tool__anchor {
     font-size: 11px;
     color: #415983 !important;
     letter-spacing: 0.2px;
@@ -95,7 +132,7 @@
     border: 0 !important;
 }
 
-.link-holder-wrapper {
+.cdx-link-tool-wrapper {
     padding: 35px;
 }
 
