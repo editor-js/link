@@ -34,6 +34,7 @@ module.exports = ( function () {
 
         label                : 'cdx-link-tool__label',
         labelLoading         : 'cdx-link-tool__label--loading',
+        labelFinish          : 'cdx-link-tool__label--finish',
         labelError           : 'cdx-link-tool__label--error',
 
         linkSettings         : 'link-settings',

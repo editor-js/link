@@ -82,10 +82,14 @@
         width: 0;
         background-color: #e5e6ec;
         opacity: 0.4;
-        transition: width 5s ease;
+        transition: width 2.5s ease;
     }
 
     &__label--loading {
+        width: 90%;
+    }
+
+    &__label--finish {
         width: 100%;
     }
 

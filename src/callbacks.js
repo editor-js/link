@@ -71,7 +71,10 @@ module.exports = ( function () {
 
         let currentBlock = codex.editor.content.currentNode,
             parsedJSON,
+            label = this.querySelector('.' + ui.css.labelLoading),
             embed;
+
+        label.classList.add(ui.css.labelFinish);
 
         try {
 
@@ -82,10 +85,15 @@ module.exports = ( function () {
 
                 embed = render(parsedJSON);
 
-                /**
-                 * Editor's content module API
-                 */
-                codex.editor.content.switchBlock(currentBlock, embed);
+                window.setTimeout( function () {
+
+                    /**
+                     * Editor's content module API
+                     */
+                    codex.editor.content.switchBlock(currentBlock, embed);
+
+                }, 2500);
+
 
             } else {
 
