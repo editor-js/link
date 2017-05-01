@@ -86,9 +86,6 @@ module.exports = ( function () {
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
-        // Default style
-        data.style = data.style || 'smallCover';
-
         linkHolder.dataset.style = data.style;
         linkHolder.classList.add(css.linkHolder, css.linkRendered);
 
@@ -191,11 +188,11 @@ module.exports = ( function () {
 
         let content = codex.editor.content.currentNode,
             linkHolder = blockContent || content.querySelector('.' + css.linkHolder),
-            title = content.querySelector('.' + css.embedTitle),
-            imageHolder = content.querySelector('.' + css.cover),
+            title = linkHolder.querySelector('.' + css.embedTitle),
+            imageHolder = linkHolder.querySelector('.' + css.cover),
             imageURL = imageHolder.style.backgroundImage.match(/http?.[^"]+/),
-            description = content.querySelector('.' + css.description),
-            link = content.querySelector('.' + css.anchor),
+            description = linkHolder.querySelector('.' + css.description),
+            link = linkHolder.querySelector('.' + css.anchor),
             outputData = {};
 
         outputData.style = linkHolder.dataset.style;
