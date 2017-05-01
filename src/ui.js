@@ -19,9 +19,7 @@ module.exports = ( function () {
     let css = {
 
         linkHolder           : 'cdx-link-tool',
-        borderForEmbed       : 'cdx-link-tool--border',
-        holderWithSmallCover : 'cdx-link-tool--small-cover',
-        holderWithBigCover   : 'cdx-link-tool--big-cover',
+        linkRendered         : 'cdx-link-tool--rendered',
         contentWrapper       : 'cdx-link-tool-wrapper',
         embedTitle           : 'cdx-link-tool__title',
         cover                : 'cdx-link-tool__cover',
@@ -77,28 +75,36 @@ module.exports = ( function () {
 
     }
 
-    /**
-     * Returns embed interface with small cover
-     *
-     * @param data {Object} - Server response
-     * @returns {Element}
-     *
-     * @protected
-     */
-    function drawEmbedWithSmallCover(data) {
+    function drawEmbed(data) {
 
         let linkHolder = drawLinkHolder(),
             title = document.createElement('DIV'),
-            image = document.createElement('IMG'),
+            imageHolder = document.createElement('DIV'),
             description = document.createElement('DIV'),
             anchor = document.createElement('A');
 
+        // Default style
+        data.style = data.style || 'smallCover';
 
-        linkHolder.classList.add(css.linkHolder, css.holderWithSmallCover, css.borderForEmbed);
-        linkHolder.dataset.style = 'smallCover';
+        linkHolder.dataset.style = data.style;
+        linkHolder.classList.add(css.linkHolder, css.linkRendered);
 
-        image.src = data.image;
-        image.classList.add(css.cover, css.smallCover);
+        imageHolder.classList.add(css.cover);
+        imageHolder.style.backgroundImage = 'url(\"' + data.image + '\")';
+
+        switch (data.style) {
+
+            case 'smallCover':
+                imageHolder.classList.add(css.smallCover);
+                break;
+
+            case 'bigCover':
+                imageHolder.classList.add(css.bigCover);
+                break;
+
+        }
+
+        // console.log(data);
 
         title.textContent = data.title;
         title.classList.add(css.embedTitle);
@@ -110,55 +116,10 @@ module.exports = ( function () {
         anchor.href = data.linkUrl;
         anchor.classList.add(css.anchor);
 
-        linkHolder.appendChild(image);
+        linkHolder.appendChild(imageHolder);
         linkHolder.appendChild(title);
         linkHolder.appendChild(description);
         linkHolder.appendChild(anchor);
-
-        return linkHolder;
-
-    }
-
-    /**
-     * Returns embed interface with big cover
-     *
-     * @param data
-     * @returns {DocumentFragment}
-     *
-     * @protected
-     */
-    function drawEmbedWithBigCover(data) {
-
-        let linkHolder = drawLinkHolder(),
-            image = document.createElement('IMG'),
-            title = document.createElement('DIV'),
-            wrapper = document.createElement('DIV'),
-            description = document.createElement('DIV'),
-            anchor = document.createElement('A');
-
-        linkHolder.classList.add(css.linkHolder, css.holderWithBigCover, css.borderForEmbed);
-        linkHolder.dataset.style = 'bigCover';
-
-        image.src = data.image;
-        image.classList.add(css.cover, css.bigCover);
-
-        title.textContent = data.title;
-        title.classList.add(css.embedTitle);
-
-        description.textContent = data.description;
-        description.classList.add(css.description);
-
-        anchor.textContent = data.linkText;
-        anchor.href = data.linkUrl;
-        anchor.classList.add(css.anchor);
-
-        wrapper.classList.add(css.contentWrapper);
-        wrapper.appendChild(title);
-        wrapper.appendChild(description);
-        wrapper.appendChild(anchor);
-
-        linkHolder.appendChild(image);
-        linkHolder.appendChild(wrapper);
 
         return linkHolder;
 
@@ -218,13 +179,14 @@ module.exports = ( function () {
         let content = codex.editor.content.currentNode,
             linkHolder = blockContent || content.querySelector('.' + css.linkHolder),
             title = content.querySelector('.' + css.embedTitle),
-            image = content.querySelector('.' + css.cover),
+            imageHolder = content.querySelector('.' + css.cover),
+            imageURL = imageHolder.style.backgroundImage.match(/http?.[^"]+/),
             description = content.querySelector('.' + css.description),
             link = content.querySelector('.' + css.anchor),
             outputData = {};
 
         outputData.style = linkHolder.dataset.style;
-        outputData.image = image.src;
+        outputData.image = imageURL;
         outputData.title = title.textContent;
         outputData.description = description.innerHTML;
         outputData.linkText = link.innerHTML;
@@ -239,8 +201,7 @@ module.exports = ( function () {
         drawInput,
         drawLabel,
         drawLinkHolder,
-        drawEmbedWithSmallCover,
-        drawEmbedWithBigCover,
+        drawEmbed,
         drawSettingsHolder,
         drawSettingsItem,
         getDataFromHTML

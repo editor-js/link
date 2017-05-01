@@ -14,14 +14,7 @@ module.exports = ( function () {
 
         if (data && data.style) {
 
-            switch (data.style) {
-                case 'smallCover':
-                    holder = ui.drawEmbedWithSmallCover(data);
-                    break;
-                case 'bigCover':
-                    holder = ui.drawEmbedWithBigCover(data);
-                    break;
-            }
+            holder = ui.drawEmbed(data);
 
         } else {
 

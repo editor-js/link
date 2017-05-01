@@ -77,12 +77,22 @@ module.exports = ( function () {
 
             parsedJSON = JSON.parse(result);
             parsedJSON.style = core.config.defaultStyle;
-            embed = render(parsedJSON);
 
-            /**
-             * Editor's content module API
-             */
-            codex.editor.content.switchBlock(currentBlock, embed);
+            if (parsedJSON.success || parsedJSON.success === 1) {
+
+                embed = render(parsedJSON);
+
+                /**
+                 * Editor's content module API
+                 */
+                codex.editor.content.switchBlock(currentBlock, embed);
+
+            } else {
+
+                error.call(this);
+
+            }
+
 
         } catch (e) {
 
