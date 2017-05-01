@@ -24,7 +24,7 @@ module.exports = ( function () {
             };
 
 
-        if (data.style !== 'bigCover' || data.style !== 'smallCover') {
+        if (data.style != 'bigCover' && data.style != 'smallCover') {
 
             // set default style
             data.style = 'smallCover';
@@ -43,9 +43,9 @@ module.exports = ( function () {
 
     function saveData(blockContent) {
 
-        let outputData = ui.getDataFromHTML(blockContent);
+        let outputdata = ui.getDataFromHTML(blockContent);
 
-        return prepareDataForSave(outputData);
+        return prepareDataForSave(outputdata);
 
     }
 

@@ -5,11 +5,11 @@ This tool provides two interface types of Embeded links
 ### Interface examples:
 
 ##### With Big Cover
-![alt text](http://i.imgur.com/xBioLve.png "Big cover")
+![alt text](http://i.imgur.com/OrFJb9q.png "Big cover")
 
 
 ##### With Small Cover
-![alt text](http://i.imgur.com/BrW1qGr.png "Small cover")
+![alt text](http://i.imgur.com/NuAgQdM.png "Small cover")
 
 ---
 
@@ -58,8 +58,7 @@ link: {
     config: {
         fetchURL: '/fetch',
         defaultStyle : 'bigCover'
-    },
-    allowPasteHTML : true
+    }
 }
 ```
 

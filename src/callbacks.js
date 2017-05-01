@@ -20,10 +20,11 @@ module.exports = ( function () {
             clipboardData,
             pastedURL;
 
-        event.preventDefault();
-
         clipboardData = event.clipboardData || window.clipboardData;
         pastedURL = clipboardData.getData('Text');
+
+        /** if previous request wasn't successful */
+        input.classList.remove(ui.css.labelError);
 
         /**
          * Use editors API
@@ -32,8 +33,8 @@ module.exports = ( function () {
             url : core.config.fetchURL + '?url=' + pastedURL,
             type : 'GET',
             beforeSend : beforeSend.bind(input),
-            success : success.bind(input),
-            error : error.bind(input)
+            success : success,
+            error : error.bind(input.parentNode)
         });
 
     }
@@ -45,22 +46,17 @@ module.exports = ( function () {
     function beforeSend() {
 
         let input = this,
-            intervalID;
+            label = ui.drawLabel();
 
-        input.value = 'Обрабатывается';
-        input.disabled = true;
-
-        intervalID = window.setInterval( function () {
-
-            input.value += '.';
-
-        }, 400);
+        input.parentNode.insertBefore(label, input);
 
         window.setTimeout( function () {
 
-            window.clearInterval(intervalID);
+            label.classList.add(ui.css.labelLoading);
 
-        }, 1200);
+        }, 50);
+
+        return input.parentNode;
 
     }
 
@@ -74,16 +70,43 @@ module.exports = ( function () {
     function success(result) {
 
         let currentBlock = codex.editor.content.currentNode,
-            parsedJSON = JSON.parse(result),
+            parsedJSON,
+            label = this.querySelector('.' + ui.css.labelLoading),
             embed;
 
-        parsedJSON.style = core.config.defaultStyle;
-        embed = render(parsedJSON);
+        label.classList.add(ui.css.labelFinish);
 
-        /**
-         * Editor's content module API
-         */
-        codex.editor.content.switchBlock(currentBlock, embed);
+        try {
+
+            parsedJSON = JSON.parse(result);
+            parsedJSON.style = core.config.defaultStyle;
+
+            if (parsedJSON.success || parsedJSON.success === 1) {
+
+                embed = render(parsedJSON);
+
+                window.setTimeout( function () {
+
+                    /**
+                     * Editor's content module API
+                     */
+                    codex.editor.content.switchBlock(currentBlock, embed);
+
+                }, 2500);
+
+
+            } else {
+
+                error.call(this);
+
+            }
+
+
+        } catch (e) {
+
+            error.call(this);
+
+        }
 
     }
 
@@ -94,7 +117,12 @@ module.exports = ( function () {
      */
     function error(result) {
 
-        // error handler. Add red borders to input
+        let linkHolder = this,
+            label = linkHolder.querySelector('.' + ui.css.label),
+            input = linkHolder.querySelector('.' + ui.css.inputElement);
+
+        label.remove();
+        input.classList.add(ui.css.labelError);
 
     }
 
