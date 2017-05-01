@@ -2,7 +2,7 @@
   "name": "codex.editor.link",
   "version": "1.0.0",
   "description": "Link Plugin for CodeX Editor",
-  "main": "webpack.config.js",
+  "main": "link.js",
   "scripts": {
     "build": "webpack"
   },
