@@ -38,7 +38,8 @@ module.exports = ( function () {
         labelError           : 'cdx-link-tool__label--error',
 
         linkSettings         : 'link-settings',
-        linkSettingsItem     : 'link-settings__item'
+        linkSettingsItem     : 'link-settings__item',
+        settingsItemActive   : 'link-settings__item--active'
 
     };
 

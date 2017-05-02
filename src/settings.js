@@ -16,6 +16,9 @@ module.exports = ( function () {
      */
     function makeSettings() {
 
+        let content = codex.editor.content.currentNode,
+            linkHolder = content.querySelector('.' + ui.css.linkHolder);
+
         let holder = ui.drawSettingsHolder(),
             types = {
                 smallCover : 'Маленькая обложка',
@@ -26,10 +29,16 @@ module.exports = ( function () {
 
             let settingsItem = ui.drawSettingsItem(types, type);
 
-            holder.appendChild(settingsItem);
-
             settingsItem.dataset.style = type;
             settingsItem.addEventListener('click', handleSettingItems);
+
+            if ( linkHolder.dataset.style == type ) {
+
+                settingsItem.classList.add(ui.css.settingsItemActive);
+
+            }
+
+            holder.appendChild(settingsItem);
 
         }
 
