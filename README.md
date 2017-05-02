@@ -2,14 +2,14 @@
 
 This tool provides two interface types of Embeded links
 
-### Interface examples:
+## Interface examples:
 
-##### With Big Cover
-![alt text](http://i.imgur.com/ofUxKF2.png "Big cover")
+### With Small Cover
+![alt text](http://i.imgur.com/ofUxKF2.png "Small cover")
 
 
-##### With Small Cover
-![alt text](http://i.imgur.com/LUaBCXw.jpg "Small cover")
+### With Big Cover
+![alt text](http://i.imgur.com/LUaBCXw.jpg "Big cover")
 
 ---
 
