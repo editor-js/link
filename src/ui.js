@@ -20,9 +20,6 @@ module.exports = ( function () {
 
         linkHolder           : 'cdx-link-tool',
         linkRendered         : 'cdx-link-tool--rendered',
-        linkWithBigCover     : 'cdx-link-tool--bigCover',
-        linkWithSmallCover   : 'cdx-link-tool--smallCover',
-        contentWrapper       : 'cdx-link-tool-wrapper',
         embedTitle           : 'cdx-link-tool__title',
         cover                : 'cdx-link-tool__cover',
         smallCover           : 'cdx-link-tool__cover--small',
@@ -108,29 +105,18 @@ module.exports = ( function () {
         switch (data.style) {
 
             case 'smallCover':
-                linkHolder.classList.add(css.linkWithSmallCover);
                 imageHolder.classList.add(css.smallCover);
-
-                linkHolder.appendChild(title);
-                linkHolder.appendChild(description);
-                linkHolder.appendChild(anchor);
                 break;
 
             case 'bigCover':
                 imageHolder.classList.add(css.bigCover);
-                linkHolder.classList.add(css.linkWithBigCover);
-
-                let contentWrapper = document.createElement('DIV');
-
-                contentWrapper.classList.add(css.contentWrapper);
-                contentWrapper.appendChild(title);
-                contentWrapper.appendChild(description);
-                contentWrapper.appendChild(anchor);
-
-                linkHolder.appendChild(contentWrapper);
                 break;
 
         }
+
+        linkHolder.appendChild(title);
+        linkHolder.appendChild(description);
+        linkHolder.appendChild(anchor);
 
         return linkHolder;
 
