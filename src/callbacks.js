@@ -24,7 +24,7 @@ module.exports = ( function () {
         pastedURL = clipboardData.getData('Text');
 
         /** if previous request wasn't successful */
-        input.classList.remove(ui.css.labelError);
+        input.classList.remove(ui.css.inputError);
 
         /**
          * Use editors API
@@ -34,7 +34,7 @@ module.exports = ( function () {
             type : 'GET',
             beforeSend : beforeSend.bind(input),
             success : success,
-            error : error.bind(input.parentNode)
+            error : error
         });
 
     }
@@ -46,9 +46,10 @@ module.exports = ( function () {
     function beforeSend() {
 
         let input = this,
-            label = ui.drawLabel();
+            label = ui.drawLabel(),
+            pluginHolder = input.parentNode;
 
-        input.parentNode.insertBefore(label, input);
+        pluginHolder.insertBefore(label, input);
 
         window.setTimeout( function () {
 
@@ -56,7 +57,7 @@ module.exports = ( function () {
 
         }, 50);
 
-        return input.parentNode;
+        return pluginHolder;
 
     }
 
@@ -65,13 +66,15 @@ module.exports = ( function () {
      * @private
      * @param result
      *
+     * @this {Element} pluginHolder
+     *
      * @description uses Editor's core API
      */
     function success(result) {
 
-        let currentBlock = codex.editor.content.currentNode,
+        let pluginHolder = this,
             parsedJSON,
-            label = this.querySelector('.' + ui.css.labelLoading),
+            label = pluginHolder.querySelector('.' + ui.css.label),
             embed;
 
         label.classList.add(ui.css.labelFinish);
@@ -90,21 +93,21 @@ module.exports = ( function () {
                     /**
                      * Editor's content module API
                      */
-                    codex.editor.content.switchBlock(currentBlock, embed);
+                    codex.editor.content.switchBlock(pluginHolder, embed, 'link');
 
                 }, 2500);
 
 
             } else {
 
-                error.call(this);
+                error.call(pluginHolder, parsedJSON.message);
 
             }
 
 
         } catch (e) {
 
-            error.call(this);
+            error.call(pluginHolder);
 
         }
 
@@ -113,16 +116,19 @@ module.exports = ( function () {
     /**
      * Error handler
      * @private
-     * @param result
+     * @param {String|null} message - error description
      */
-    function error(result) {
+    function error(message) {
 
         let linkHolder = this,
             label = linkHolder.querySelector('.' + ui.css.label),
             input = linkHolder.querySelector('.' + ui.css.inputElement);
 
+        input.classList.add(ui.css.inputError);
+
         label.remove();
-        input.classList.add(ui.css.labelError);
+
+        codex.editor.notifications.notification({type: 'error', message: message || 'Unsupported link'});
 
     }
 

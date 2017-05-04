@@ -28,11 +28,11 @@ module.exports = ( function () {
         anchor               : 'cdx-link-tool__anchor',
 
         inputElement         : 'cdx-link-tool__input',
+        inputError           : 'cdx-link-tool__input--error',
 
         label                : 'cdx-link-tool__label',
         labelLoading         : 'cdx-link-tool__label--loading',
         labelFinish          : 'cdx-link-tool__label--finish',
-        labelError           : 'cdx-link-tool__label--error',
 
         linkSettings         : 'link-settings',
         linkSettingsItem     : 'link-settings__item',

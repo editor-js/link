@@ -88,7 +88,7 @@ module.exports = ( function () {
         /**
          * Editor's content module API
          */
-        codex.editor.content.switchBlock(currentBlock, newEmbed);
+        codex.editor.content.switchBlock(currentBlock, newEmbed, 'link');
 
     }
 
@@ -108,7 +108,7 @@ module.exports = ( function () {
         /**
          * Editor's content module API
          */
-        codex.editor.content.switchBlock(currentBlock, newEmbed);
+        codex.editor.content.switchBlock(currentBlock, newEmbed, 'link');
 
     }
 
