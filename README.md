@@ -1,3 +1,5 @@
+![](https://badgen.net/badge/CodeX%20Editor/v1.0/gray)
+
 # Link Embed Tool for Codex Editor
 
 This tool provides two interface types of Embeded links
