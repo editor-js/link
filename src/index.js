@@ -166,8 +166,11 @@ export default class ImageTool {
     const inputHolder = this.make('div', this.CSS.inputHolder);
 
     this.nodes.progress = this.make('label', this.CSS.progress);
-    this.nodes.input = this.make('input', [this.CSS.input, this.CSS.inputEl]);
-    this.nodes.input.placeholder = 'Paste Link...';
+    this.nodes.input = this.make('div', [this.CSS.input, this.CSS.inputEl], {
+      contentEditable: true
+    });
+
+    this.nodes.input.dataset.placeholder = 'Paste Link...';
 
     this.nodes.input.addEventListener('paste', (event) => {
       const url = (event.clipboardData || window.clipboardData).getData('text');
