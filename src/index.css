@@ -1,5 +1,7 @@
 .link-tool {
-  --placeholder-color: #635965;
+  --link-color: #415983;
+  --progress-color: #8a459b;
+  --background-color: #fafafb;
 
   position: relative;
   margin: 0.7em 0;
@@ -26,7 +28,7 @@
     box-shadow: inset 0 1px 3px 0 rgba(102, 85, 107, 0.04);
     height: 100%;
     width: 0;
-    background-color: #8a459b;
+    background-color: var(--progress-color);
     opacity: 0.08;
 
     &--loading {
@@ -36,6 +38,16 @@
 
     &--loaded {
       width: 100%;
+    }
+  }
+
+  &__content {
+    padding: 25px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px #fff;
+
+    &--rendered {
+      background: var(--background-color);
     }
   }
 
@@ -66,9 +78,9 @@
     display: block;
     margin-top: 15px;
     font-size: 11px;
-    color: #415983 !important;
+    color: var(--link-color) !important;
     letter-spacing: 0.2px;
-    line-height: 1em;
+    line-height: 1.25em;
     text-decoration: none !important;
     border: 0 !important;
     padding: 0 !important;

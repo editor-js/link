@@ -148,6 +148,7 @@ export default class ImageTool {
       inputEl: 'link-tool__input',
       inputHolder: 'link-tool__input-holder',
       linkContent: 'link-tool__content',
+      linkContentRendered: 'link-tool__content--rendered',
       linkImage: 'link-tool__image',
       linkTitle: 'link-tool__title',
       linkDescription: 'link-tool__description',
@@ -223,6 +224,7 @@ export default class ImageTool {
 
     this.nodes.linkText.innerHTML = this._data.link;
     this.nodes.linkText.setAttribute('href', this._data.link);
+    this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
   }
 
   /**
