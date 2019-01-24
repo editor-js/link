@@ -3,6 +3,10 @@
   --progress-color: #8a459b;
   --background-color: #fafafb;
 
+  --error-bg-color: #fff3f6;
+  --error-border-color: #f3e0e0;
+  --error-color: #a95a5a;
+
   position: relative;
   margin: 0.7em 0;
   overflow: hidden;
@@ -20,6 +24,16 @@
 
     &-holder {
       position: relative;
+
+      &--error {
+        ^^& {
+          background-image: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="#E09393" d="M14.758 7.25l-3.004 3.002a4.245 4.245 0 0 1-6.005 0 4.242 4.242 0 0 1-.644-.857L6.5 8c.067-.067.148-.105.227-.15.096.329.265.641.524.9a2.125 2.125 0 0 0 3.002 0l3.003-3.002a2.125 2.125 0 0 0 0-3.003 2.126 2.126 0 0 0-3.003 0L9.186 3.814a5.328 5.328 0 0 0-2.71-.295l2.276-2.275a4.247 4.247 0 0 1 6.006 6.005zm-7.94 4.936l-1.069 1.07a2.127 2.127 0 0 1-3.003 0 2.127 2.127 0 0 1 0-3.004L5.75 7.249a2.125 2.125 0 0 1 3.003 0c.259.259.427.57.525.9.078-.046.16-.083.226-.15l1.395-1.394a4.173 4.173 0 0 0-.645-.857 4.246 4.246 0 0 0-6.005 0L1.245 8.75a4.247 4.247 0 0 0 6.006 6.005l2.276-2.275a5.324 5.324 0 0 1-2.71-.295z"/></svg>');
+          background-color: var(--error-bg-color);
+          border-color: var(--error-border-color);
+          color: var(--error-color);
+          box-shadow: inset 0 1px 3px 0 rgba(146, 62, 62, .05);
+        }
+      }
     }
   }
 

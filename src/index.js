@@ -147,6 +147,7 @@ export default class ImageTool {
       container: 'link-tool',
       inputEl: 'link-tool__input',
       inputHolder: 'link-tool__input-holder',
+      inputError: 'link-tool__input-holder--error',
       linkContent: 'link-tool__content',
       linkContentRendered: 'link-tool__content--rendered',
       linkImage: 'link-tool__image',
@@ -249,6 +250,14 @@ export default class ImageTool {
   }
 
   /**
+   * If data fetching failed, set input error style
+   */
+  setErrorStyle() {
+    this.nodes.inputHolder.classList.add(this.CSS.inputError);
+    this.nodes.progress.remove();
+  }
+
+  /**
    * Sends to backend pasted url and receives link data
    * @param {string} url - link source url
    */
@@ -300,7 +309,7 @@ export default class ImageTool {
       style: 'error'
     });
 
-    this.hideProgress();
+    this.setErrorStyle();
   }
 
   /**
