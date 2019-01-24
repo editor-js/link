@@ -19,10 +19,6 @@
     &-holder {
       position: relative;
     }
-
-    &::placeholder {
-      color: var(--placeholder-color);
-    }
   }
 
   &__progress {
