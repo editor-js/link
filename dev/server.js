@@ -5,10 +5,8 @@
  * How to use [requires Node.js 10.0.0+ and npm install]:
  *
  * 1. $ node dev/server.js
- * 2. set 'endpoints' at the Link Tools 'config' in example.html
- *   endpoints : {
- *      byUrl: 'http://localhost:8008/fetchUrl'
- *   }
+ * 2. set 'endpoint' at the Link Tools 'config' in example.html
+ *   endpoint : 'http://localhost:8008/fetchUrl'
  *
  */
 const http = require('http');
