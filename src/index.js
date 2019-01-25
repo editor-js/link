@@ -49,7 +49,7 @@ export default class ImageTool {
      * Tool's initial config
      */
     this.config = {
-      endpoints: config.endpoints || ''
+      endpoint: config.endpoint || ''
     };
 
     this.nodes = {
@@ -177,7 +177,7 @@ export default class ImageTool {
     this.nodes.input.addEventListener('paste', (event) => {
       const url = (event.clipboardData || window.clipboardData).getData('text');
 
-      this.uploadByUrl(url);
+      this.fetchLinkData(url);
     });
 
     inputHolder.appendChild(this.nodes.progress);
@@ -216,14 +216,14 @@ export default class ImageTool {
     }
 
     if (meta.title) {
-      this.nodes.linkTitle.innerHTML = meta.title;
+      this.nodes.linkTitle.textContent = meta.title;
     }
 
     if (meta.description) {
-      this.nodes.linkDescription.innerHTML = meta.description;
+      this.nodes.linkDescription.textContent = meta.description;
     }
 
-    this.nodes.linkText.innerHTML = this._data.link;
+    this.nodes.linkText.textContent = this._data.link;
     this.nodes.linkText.setAttribute('href', this._data.link);
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
   }
@@ -261,11 +261,11 @@ export default class ImageTool {
    * Sends to backend pasted url and receives link data
    * @param {string} url - link source url
    */
-  uploadByUrl(url) {
+  fetchLinkData(url) {
     this.showProgress();
     this._data.link = url;
     ajax.get({
-      url: this.config.endpoints.byUrl,
+      url: this.config.endpoint,
       data: {
         url: url
       }
