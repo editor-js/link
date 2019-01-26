@@ -39,6 +39,15 @@ class LinkTool {
   }
 
   /**
+   * Allow to press Enter inside the CodeTool textarea
+   * @returns {boolean}
+   * @public
+   */
+  static get enableLineBreaks() {
+    return true;
+  }
+
+  /**
    * @param {LinkToolData} data - previously saved data
    * @param {config} config - user config for Tool
    * @param {object} api - CodeX Editor API
@@ -178,6 +187,15 @@ class LinkTool {
       const url = (event.clipboardData || window.clipboardData).getData('text');
 
       this.fetchLinkData(url);
+    });
+
+    this.nodes.input.addEventListener('keydown', (event) => {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        const url = this.nodes.input.textContent;
+
+        this.fetchLinkData(url);
+      }
     });
 
     inputHolder.appendChild(this.nodes.progress);
