@@ -35,8 +35,7 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
     library: 'LinkTool',
-    libraryTarget: 'umd',
-    libraryExport: 'default'
+    libraryTarget: 'umd'
   },
   optimization: {
     minimize: true

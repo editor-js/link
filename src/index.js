@@ -9,6 +9,7 @@
 import css from './index.css';
 import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
+import '@babel/polyfill';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -22,7 +23,7 @@ import ajax from '@codexteam/ajax';
  *                              - image
  *                              - url
  */
-export default class ImageTool {
+class LinkTool {
   /**
    * Get Tool toolbox settings
    * icon - Tool icon's SVG
@@ -89,15 +90,14 @@ export default class ImageTool {
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
 
-    this.nodes.container.appendChild(this.nodes.linkContent);
-
     /**
      * If Tool already has data, render link preview, otherwise insert input
      */
     if (Object.keys(this._data.linkData).length) {
+      this.nodes.container.appendChild(this.nodes.linkContent);
       this.showLinkPreview(this._data.linkData);
     } else {
-      this.nodes.container.insertBefore(this.nodes.inputHolder, this.nodes.linkContent);
+      this.nodes.container.appendChild(this.nodes.inputHolder);
     }
 
     this.nodes.wrapper.appendChild(this.nodes.container);
@@ -211,6 +211,8 @@ export default class ImageTool {
    * @param meta - link meta data
    */
   showLinkPreview(meta) {
+    this.nodes.container.appendChild(this.nodes.linkContent);
+
     if (meta.image) {
       this.nodes.linkImage.style.backgroundImage = 'url(' + meta.image.url + ')';
     }
@@ -239,20 +241,14 @@ export default class ImageTool {
    * Hide loading progressbar
    */
   hideProgress() {
-    return new Promise((resolve) => {
-      this.nodes.progress.classList.remove(this.CSS.progressLoading);
-      this.nodes.progress.classList.add(this.CSS.progressLoaded);
-
-      setTimeout(() => {
-        resolve();
-      }, 500);
-    });
+    this.nodes.progress.classList.remove(this.CSS.progressLoading);
+    this.nodes.progress.classList.add(this.CSS.progressLoaded);
   }
 
   /**
    * If data fetching failed, set input error style
    */
-  setErrorStyle() {
+  applyErrorStyle() {
     this.nodes.inputHolder.classList.add(this.CSS.inputError);
     this.nodes.progress.remove();
   }
@@ -261,19 +257,22 @@ export default class ImageTool {
    * Sends to backend pasted url and receives link data
    * @param {string} url - link source url
    */
-  fetchLinkData(url) {
+  async fetchLinkData(url) {
     this.showProgress();
-    this._data.link = url;
-    ajax.get({
-      url: this.config.endpoint,
-      data: {
-        url: url
-      }
-    }).then((response) => {
+    this.data.link = url;
+
+    try {
+      const response = await (ajax.get({
+        url: this.config.endpoint,
+        data: {
+          url: url
+        }
+      }));
+
       this.onFetch(response);
-    }).catch((error) => {
+    } catch (error) {
       console.log('error', error);
-    });
+    }
   }
 
   /**
@@ -284,12 +283,10 @@ export default class ImageTool {
     if (response && response.success) {
       const metaData = response.meta;
 
-      this._data.linkData = metaData;
+      this.data.linkData = metaData;
 
-      this.hideProgress().then(() => {
-        this.nodes.inputHolder.remove();
-        this.showLinkPreview(metaData);
-      });
+      this.nodes.inputHolder.remove();
+      this.showLinkPreview(metaData);
     } else {
       this.fetchingFailed('incorrect response: ' + JSON.stringify(response));
     }
@@ -309,7 +306,7 @@ export default class ImageTool {
       style: 'error'
     });
 
-    this.setErrorStyle();
+    this.applyErrorStyle();
   }
 
   /**
@@ -335,3 +332,5 @@ export default class ImageTool {
     return el;
   }
 }
+
+module.exports = LinkTool;

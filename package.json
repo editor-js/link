@@ -21,6 +21,7 @@
     "@codexteam/ajax": "^3.2.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^1.0.0",
     "eslint": "^5.9.0",
