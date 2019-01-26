@@ -272,6 +272,10 @@ class LinkTool {
       this.onFetch(response);
     } catch (error) {
       console.log('error', error);
+      this.api.notifier.show({
+        message: 'Didn\'t receive data from server',
+        style: 'error'
+      });
     }
   }
 
