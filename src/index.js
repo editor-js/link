@@ -9,7 +9,6 @@
 import css from './index.css';
 import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
-import '@babel/polyfill';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -23,7 +22,7 @@ import '@babel/polyfill';
  *                              - image
  *                              - url
  */
-class LinkTool {
+export default class LinkTool {
   /**
    * Get Tool toolbox settings
    * icon - Tool icon's SVG
@@ -39,7 +38,7 @@ class LinkTool {
   }
 
   /**
-   * Allow to press Enter inside the CodeTool textarea
+   * Allow to press Enter inside the LinkTool input
    * @returns {boolean}
    * @public
    */
@@ -75,14 +74,6 @@ class LinkTool {
       linkText: null
     };
 
-    /**
-     * Set saved state
-     */
-    this._data = {
-      link: '',
-      linkData: {}
-    };
-
     this.data = data;
   }
 
@@ -102,9 +93,9 @@ class LinkTool {
     /**
      * If Tool already has data, render link preview, otherwise insert input
      */
-    if (Object.keys(this._data.linkData).length) {
+    if (Object.keys(this.data.linkData).length) {
       this.nodes.container.appendChild(this.nodes.linkContent);
-      this.showLinkPreview(this._data.linkData);
+      this.showLinkPreview(this.data.linkData);
     } else {
       this.nodes.container.appendChild(this.nodes.inputHolder);
     }
@@ -129,8 +120,7 @@ class LinkTool {
    * @param {LinkToolData} data
    */
   set data(data) {
-    this._data.link = data.link || '';
-    this._data.linkData = data.linkData || {};
+    this._data = Object.assign({}, {link: data.link || '', linkData: data.linkData || {}});
   }
 
   /**
@@ -243,8 +233,8 @@ class LinkTool {
       this.nodes.linkDescription.textContent = meta.description;
     }
 
-    this.nodes.linkText.textContent = this._data.link;
-    this.nodes.linkText.setAttribute('href', this._data.link);
+    this.nodes.linkText.textContent = this.data.link;
+    this.nodes.linkText.setAttribute('href', this.data.link);
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
   }
 
@@ -354,5 +344,3 @@ class LinkTool {
     return el;
   }
 }
-
-module.exports = LinkTool;
