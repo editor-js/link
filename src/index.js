@@ -15,12 +15,9 @@ import ajax from '@codexteam/ajax';
  * @description This format expected from backend on link data fetching
  * @property {number} success  - 1 for successful uploading, 0 for failure
  * @property {object} linkData - Object with link data.
- *                           tool may have any data provided by backend,
- *                           currently are supported by design:
- *                              - title
- *                              - description
- *                              - image
- *                              - url
+ *
+ * Tool may have any data provided by backend, currently are supported by design:
+ * title, description, image, url
  */
 export default class LinkTool {
   /**
