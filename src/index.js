@@ -122,8 +122,9 @@ export default class LinkTool {
    * @param {LinkToolData} data
    */
   set data(data) {
-    this._data = Object.assign(this._data, {
-      link: data.link || this._data.link, meta: data.meta || this._data.meta
+    this._data = Object.assign({}, {
+      link: data.link || this._data.link,
+      meta: data.meta || this._data.meta
     });
   }
 
