@@ -71,6 +71,11 @@ export default class LinkTool {
       linkText: null
     };
 
+    this._data = {
+      link: '',
+      meta: {}
+    };
+
     this.data = data;
   }
 
@@ -117,7 +122,9 @@ export default class LinkTool {
    * @param {LinkToolData} data
    */
   set data(data) {
-    this._data = Object.assign({}, {link: data.link || '', meta: data.meta || {}});
+    this._data = Object.assign(this._data, {
+      link: data.link || this._data.link, meta: data.meta || this._data.meta
+    });
   }
 
   /**
@@ -301,7 +308,7 @@ export default class LinkTool {
 
     const metaData = response.meta;
 
-    this.data = {meta: metaData, link: this.data.link};
+    this.data = {meta: metaData};
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
