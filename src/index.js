@@ -246,8 +246,12 @@ export default class LinkTool {
    * Hide loading progressbar
    */
   hideProgress() {
-    this.nodes.progress.classList.remove(this.CSS.progressLoading);
-    this.nodes.progress.classList.add(this.CSS.progressLoaded);
+    return new Promise((resolve) => {
+      this.nodes.progress.classList.remove(this.CSS.progressLoading);
+      this.nodes.progress.classList.add(this.CSS.progressLoaded);
+
+      setTimeout(resolve, 500);
+    });
   }
 
   /**
@@ -299,8 +303,10 @@ export default class LinkTool {
 
     this.data = {meta: metaData};
 
-    this.nodes.inputHolder.remove();
-    this.showLinkPreview(metaData);
+    this.hideProgress().then(() => {
+      this.nodes.inputHolder.remove();
+      this.showLinkPreview(metaData);
+    });
   }
 
   /**
