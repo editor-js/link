@@ -301,7 +301,7 @@ export default class LinkTool {
 
     const metaData = response.meta;
 
-    this.data = {meta: metaData};
+    this.data = {meta: metaData, link: this.data.link};
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();

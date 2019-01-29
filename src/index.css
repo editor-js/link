@@ -62,6 +62,7 @@
 
     &--rendered {
       background: var(--background-color);
+      box-shadow: 0 0 0 2px #fff;
     }
   }
 
