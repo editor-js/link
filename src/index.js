@@ -9,6 +9,8 @@
 import css from './index.css';
 import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
+// eslint-disable-next-line
+import polyfill from 'url-polyfill';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -238,7 +240,7 @@ export default class LinkTool {
       this.nodes.linkDescription.textContent = meta.description;
     }
 
-    this.nodes.linkText.textContent = this.data.link;
+    this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
     this.nodes.linkText.setAttribute('href', this.data.link);
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
   }
