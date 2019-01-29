@@ -2,7 +2,7 @@
  * @typedef {object} LinkToolData
  * @description Link Tool's input and output data format
  * @property {string} link — data url
- * @property {object} linkData — fetched link data
+ * @property {object} meta — fetched link data
  */
 
 // eslint-disable-next-line
@@ -14,7 +14,7 @@ import ajax from '@codexteam/ajax';
  * @typedef {object} UploadResponseFormat
  * @description This format expected from backend on link data fetching
  * @property {number} success  - 1 for successful uploading, 0 for failure
- * @property {object} linkData - Object with link data.
+ * @property {object} meta - Object with link data.
  *
  * Tool may have any data provided by backend, currently are supported by design:
  * title, description, image, url
@@ -90,9 +90,9 @@ export default class LinkTool {
     /**
      * If Tool already has data, render link preview, otherwise insert input
      */
-    if (Object.keys(this.data.linkData).length) {
+    if (Object.keys(this.data.meta).length) {
       this.nodes.container.appendChild(this.nodes.linkContent);
-      this.showLinkPreview(this.data.linkData);
+      this.showLinkPreview(this.data.meta);
     } else {
       this.nodes.container.appendChild(this.nodes.inputHolder);
     }
@@ -117,7 +117,7 @@ export default class LinkTool {
    * @param {LinkToolData} data
    */
   set data(data) {
-    this._data = Object.assign({}, {link: data.link || '', linkData: data.linkData || {}});
+    this._data = Object.assign({}, {link: data.link || '', meta: data.meta || {}});
   }
 
   /**
@@ -264,13 +264,13 @@ export default class LinkTool {
    */
   async fetchLinkData(url) {
     this.showProgress();
-    this.data.link = url;
+    this.data = {link: url};
 
     try {
       const response = await (ajax.get({
         url: this.config.endpoint,
         data: {
-          url: url
+          url
         }
       }));
 
@@ -289,16 +289,18 @@ export default class LinkTool {
    * @param {UploadResponseFormat} response
    */
   onFetch(response) {
-    if (response && response.success) {
-      const metaData = response.meta;
-
-      this.data.linkData = metaData;
-
-      this.nodes.inputHolder.remove();
-      this.showLinkPreview(metaData);
-    } else {
+    if (!response || !response.success) {
       this.fetchingFailed('incorrect response: ' + JSON.stringify(response));
+
+      return;
     }
+
+    const metaData = response.meta;
+
+    this.data = {meta: metaData};
+
+    this.nodes.inputHolder.remove();
+    this.showLinkPreview(metaData);
   }
 
   /**

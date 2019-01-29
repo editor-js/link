@@ -30,7 +30,7 @@ const LinkTool = require('codex.editor.link');
 
 ### Download to your project's source dir
 
-1. Upload folder `dist` from repository
+1. Download folder `dist` from repository
 2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
@@ -78,14 +78,14 @@ This Tool returns `data` with following format
 | Field          | Type      | Description                     |
 | -------------- | --------- | ------------------------------- |
 | link           | `string`  | Pasted link url                 |
-| linkData       | `object`  | Fetched link data. Any data got from backend. Currently title, image and description are supported by plugin's design. |
+| meta           | `object`  | Fetched link data. Any data got from backend. Currently title, image and description are supported by plugin's design. |
 
 ```json
 {
     "type" : "linkTool",
     "data" : {
         "link" : "https://codex.so",
-        "linkData" : {
+        "meta" : {
             "title" : "CodeX Team",
             "site_name" : "CodeX",
             "description" : "Club of web-development, design and marketing. We build team learning how to build full-valued projects on the world market.",
@@ -107,7 +107,7 @@ Backend response **should** cover following format:
 ```json5
 {
     "success" : 1,
-    "linkData": {
+    "meta": {
         // ... any fields you want
     }
 }
@@ -115,13 +115,13 @@ Backend response **should** cover following format:
 
 **success** — uploading status. 1 for successful, 0 for failed
 
-**linkData** — link fetched data. 
+**meta** — link fetched data. 
 
 Currently title, image and description fields are supported by plugin's design . They should have the following format in the response:
 ```json5
 {
     "success" : 1,
-    "linkData": {
+    "meta": {
         "title" : "CodeX Team",
         "description" : "Club of web-development, design and marketing. We build team learning how to build full-valued projects on the world market.",
         "image" : {
