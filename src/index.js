@@ -180,12 +180,6 @@ export default class LinkTool {
 
     this.nodes.input.dataset.placeholder = 'Paste Link...';
 
-    this.nodes.input.addEventListener('paste', (event) => {
-      const url = (event.clipboardData || window.clipboardData).getData('text');
-
-      this.fetchLinkData(url);
-    });
-
     this.nodes.input.addEventListener('keydown', (event) => {
       if (event.keyCode === 13) {
         event.preventDefault();
