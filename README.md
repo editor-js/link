@@ -2,7 +2,7 @@
 
 # Link Tool
 
-Link Block for the [CodeX Editor](https://ifmo.su/editor).
+Link Block for the [CodeX Editor](https://codex.so/editor).
 
 ![](https://capella.pics/dcf81467-d6f5-4722-a795-13a2becd6aa9.jpg)
 
