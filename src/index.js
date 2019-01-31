@@ -185,14 +185,7 @@ export default class LinkTool {
         event.preventDefault();
         const url = this.nodes.input.textContent;
 
-        try {
-          this.fetchLinkData(url);
-        } catch (e) {
-          this.api.notifier.show({
-            message: e.message,
-            style: 'error'
-          });
-        }
+        this.fetchLinkData(url);
       }
     });
 
@@ -277,20 +270,22 @@ export default class LinkTool {
    * Sends to backend pasted url and receives link data
    * @param {string} url - link source url
    */
-  fetchLinkData(url) {
+  async fetchLinkData(url) {
     this.showProgress();
     this.data = {link: url};
 
-    ajax.get({
-      url: this.config.endpoint,
-      data: {
-        url
-      }
-    }).then((response) => {
+    try {
+      const response = await (ajax.get({
+        url: this.config.endpoint,
+        data: {
+          url
+        }
+      }));
+
       this.onFetch(response);
-    }).catch(() => {
-      throw new Error('Did not receive data from server');
-    });
+    } catch (error) {
+      this.fetchingFailed('Haven\'t receive data from server');
+    }
   }
 
   /**
@@ -299,8 +294,7 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed('incorrect response: ' + JSON.stringify(response));
-
+      this.fetchingFailed('Can not get this link data, try another');
       return;
     }
 
@@ -318,13 +312,11 @@ export default class LinkTool {
    * Handle link fetching errors
    * @private
    *
-   * @param {string} errorText
+   * @param {string} errorMessage
    */
-  fetchingFailed(errorText) {
-    console.log('Link Tool: data fetching because of', errorText);
-
+  fetchingFailed(errorMessage) {
     this.api.notifier.show({
-      message: 'Can not get this link data, try another',
+      message: errorMessage,
       style: 'error'
     });
 

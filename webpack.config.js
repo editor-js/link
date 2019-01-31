@@ -37,8 +37,5 @@ module.exports = {
     library: 'LinkTool',
     libraryExport: 'default',
     libraryTarget: 'umd'
-  },
-  optimization: {
-    minimize: true
   }
 };
