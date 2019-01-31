@@ -185,7 +185,14 @@ export default class LinkTool {
         event.preventDefault();
         const url = this.nodes.input.textContent;
 
-        this.fetchLinkData(url);
+        try {
+          this.fetchLinkData(url);
+        } catch (e) {
+          this.api.notifier.show({
+            message: e.message,
+            style: 'error'
+          });
+        }
       }
     });
 
@@ -270,26 +277,20 @@ export default class LinkTool {
    * Sends to backend pasted url and receives link data
    * @param {string} url - link source url
    */
-  async fetchLinkData(url) {
+  fetchLinkData(url) {
     this.showProgress();
     this.data = {link: url};
 
-    try {
-      const response = await (ajax.get({
-        url: this.config.endpoint,
-        data: {
-          url
-        }
-      }));
-
+    ajax.get({
+      url: this.config.endpoint,
+      data: {
+        url
+      }
+    }).then((response) => {
       this.onFetch(response);
-    } catch (error) {
-      console.log('error', error);
-      this.api.notifier.show({
-        message: 'Didn\'t receive data from server',
-        style: 'error'
-      });
-    }
+    }).catch(() => {
+      throw new Error('Did not receive data from server');
+    });
   }
 
   /**
