@@ -181,11 +181,18 @@ export default class LinkTool {
     this.nodes.input.dataset.placeholder = 'Paste Link...';
 
     this.nodes.input.addEventListener('keydown', (event) => {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-        const url = this.nodes.input.textContent;
+      const [ENTER, A] = [13, 65];
+      const cmdPressed = event.ctrlKey || event.metaKey;
 
-        this.fetchLinkData(url);
+      switch (event.keyCode) {
+        case ENTER:
+          this.startFetching(event);
+          break;
+        case A:
+          if (cmdPressed) {
+            this.selectLinkUrl(event);
+          }
+          break;
       }
     });
 
@@ -193,6 +200,46 @@ export default class LinkTool {
     inputHolder.appendChild(this.nodes.input);
 
     return inputHolder;
+  }
+
+  /**
+   * Activates link data fetching by url
+   */
+  startFetching(event) {
+    event.preventDefault();
+    const url = this.nodes.input.textContent;
+
+    this.removeErrorStyle();
+    this.fetchLinkData(url);
+  }
+
+  /**
+   * If previous link data fetching failed, remove error styles
+   */
+  removeErrorStyle() {
+    this.nodes.inputHolder.classList.remove(this.CSS.inputError);
+    this.nodes.inputHolder.insertBefore(this.nodes.progress, this.nodes.input);
+  }
+
+  /**
+   * Select LinkTool input content by CMD+A
+   * @param {KeyboardEvent} event
+   */
+  selectLinkUrl(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const selection = window.getSelection();
+    const range = new Range();
+
+    const currentNode = selection.anchorNode.parentNode;
+    const currentItem = currentNode.closest(`.${this.CSS.inputHolder}`);
+    const inputElement = currentItem.querySelector(`.${this.CSS.inputEl}`);
+
+    range.selectNodeContents(inputElement);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
   /**
@@ -284,7 +331,7 @@ export default class LinkTool {
 
       this.onFetch(response);
     } catch (error) {
-      this.fetchingFailed('Haven\'t receive data from server');
+      this.fetchingFailed('Haven\'t received data from server');
     }
   }
 
