@@ -281,9 +281,14 @@ export default class LinkTool {
       this.nodes.linkDescription.textContent = meta.description;
     }
 
-    this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
-    this.nodes.linkText.setAttribute('href', this.data.link);
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
+    this.nodes.linkText.setAttribute('href', this.data.link);
+
+    try {
+      this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
+    } catch (e) {
+      this.nodes.linkText.textContent = this.data.link;
+    }
   }
 
   /**
