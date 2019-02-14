@@ -247,12 +247,14 @@ export default class LinkTool {
    * @return {HTMLElement}
    */
   prepareLinkPreview() {
-    const holder = this.make('div', this.CSS.linkContent);
+    const holder = this.make('a', this.CSS.linkContent, {
+      target: '_blank'
+    });
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
-    this.nodes.linkTitle = this.make('h2', this.CSS.linkTitle);
+    this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
-    this.nodes.linkText = this.make('a', this.CSS.linkText);
+    this.nodes.linkText = this.make('span', this.CSS.linkText);
 
     holder.appendChild(this.nodes.linkImage);
     holder.appendChild(this.nodes.linkTitle);
@@ -282,7 +284,7 @@ export default class LinkTool {
     }
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
-    this.nodes.linkText.setAttribute('href', this.data.link);
+    this.nodes.linkContent.setAttribute('href', this.data.link);
 
     try {
       this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
