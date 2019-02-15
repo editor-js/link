@@ -50,7 +50,7 @@ export default class LinkTool {
    * @param {config} config - user config for Tool
    * @param {object} api - CodeX Editor API
    */
-  constructor({data, config, api}) {
+  constructor({ data, config, api }) {
     this.api = api;
 
     /**
@@ -336,7 +336,7 @@ export default class LinkTool {
    */
   async fetchLinkData(url) {
     this.showProgress();
-    this.data = {link: url};
+    this.data = { link: url };
 
     try {
       const response = await (ajax.get({
@@ -364,7 +364,7 @@ export default class LinkTool {
 
     const metaData = response.meta;
 
-    this.data = {meta: metaData};
+    this.data = { meta: metaData };
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
