@@ -178,7 +178,7 @@ export default class LinkTool {
       contentEditable: true
     });
 
-    this.nodes.input.dataset.placeholder = 'Paste Link...';
+    this.nodes.input.dataset.placeholder = 'Link';
 
     this.nodes.input.addEventListener('keydown', (event) => {
       const [ENTER, A] = [13, 65];
@@ -248,7 +248,8 @@ export default class LinkTool {
    */
   prepareLinkPreview() {
     const holder = this.make('a', this.CSS.linkContent, {
-      target: '_blank'
+      target: '_blank',
+      rel: 'nofollow noindex noreferrer'
     });
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
