@@ -35,7 +35,8 @@
     z-index: -1;
 
     &--loading {
-      width: 80%;
+      -webkit-animation: progress 1s ease-in;
+      -webkit-animation-fill-mode: forwards;
     }
 
     &--loaded {
@@ -116,4 +117,13 @@
 
 .codex-editor--narrow .link-tool__image {
   display: none;
+}
+
+@-webkit-keyframes progress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 85%;
+  }
 }

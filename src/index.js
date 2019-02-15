@@ -180,6 +180,10 @@ export default class LinkTool {
 
     this.nodes.input.dataset.placeholder = 'Link';
 
+    this.nodes.input.addEventListener('paste', (event) => {
+      this.startFetching(event);
+    });
+
     this.nodes.input.addEventListener('keydown', (event) => {
       const [ENTER, A] = [13, 65];
       const cmdPressed = event.ctrlKey || event.metaKey;
@@ -207,7 +211,12 @@ export default class LinkTool {
    */
   startFetching(event) {
     event.preventDefault();
-    const url = this.nodes.input.textContent;
+
+    let url = this.nodes.input.textContent;
+
+    if (event.type === 'paste') {
+      url = (event.clipboardData || window.clipboardData).getData('text');
+    }
 
     this.removeErrorStyle();
     this.fetchLinkData(url);
