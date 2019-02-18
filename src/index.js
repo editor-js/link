@@ -318,7 +318,7 @@ export default class LinkTool {
       this.nodes.progress.classList.remove(this.CSS.progressLoading);
       this.nodes.progress.classList.add(this.CSS.progressLoaded);
 
-      setTimeout(resolve, 500);
+      setTimeout(resolve, 750);
     });
   }
 
