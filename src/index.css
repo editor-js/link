@@ -31,11 +31,10 @@
     height: 100%;
     width: 0;
     background-color: #f4f5f7;
-    transition: width 1s ease;
     z-index: -1;
 
     &--loading {
-      -webkit-animation: progress 1s ease-in;
+      -webkit-animation: progress 500ms ease-in;
       -webkit-animation-fill-mode: forwards;
     }
 
