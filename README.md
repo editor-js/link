@@ -1,104 +1,133 @@
-![](https://badgen.net/badge/CodeX%20Editor/v1.0/gray)
+![](https://badgen.net/badge/CodeX%20Editor/v2.0/blue)
 
-# Link Embed Tool for Codex Editor
+# Link Tool
 
-This tool provides two interface types of Embeded links
+Link Block for the [CodeX Editor](https://codex.so/editor).
 
-## Interface examples:
+![](src/gif/demo.gif)
 
-### With Small Cover
-![alt text](http://i.imgur.com/ofUxKF2.png "Small cover")
+## Features
 
+Allows to add link previews to your articles.
 
-### With Big Cover
-![alt text](http://i.imgur.com/LUaBCXw.jpg "Big cover")
+**Note:** this Tool requires server-side implementation for link data fetching. See [backend response format](#server-format) for more details.
 
----
+## Installation
 
-# Installation
+### Install via NPM
 
-Plugin extends Codex Editor tools
+Get the package
 
-There are different ways to use
+```shell
+npm i --save-dev codex.editor.link
+```
 
-### Install via npm
+Include module at your application
 
 ```javascript
-npm install --save codex.editor.link
+const LinkTool = require('codex.editor.link');
 ```
 
-### From CDN
+### Download to your project's source dir
 
-Add script and stylesheet to your HTML page
+1. Download folder `dist` from repository
+2. Add `dist/bundle.js` file to your page.
 
-```
-<script src="https://raw.githubusercontent.com/codex-editor/link/master/link.js"></script>
-<link rel="stylesheet" href="https://raw.githubusercontent.com/codex-editor/link/master/link.css"></link>
-```
+### Load from CDN
 
+You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/codex.editor.link).
 
-### Or clone from Github
+`https://cdn.jsdelivr.net/npm/codex.editor.link@2.0.0`
 
-```
-https://github.com/codex-editor/link.git
-```
+Then require this script on page with CodeX Editor through the `<script src=""></script>` tag.
 
-# Usage
+## Usage
 
-Pass new tool to the ```codex.editor.start``` method in ```tools``` array:
+Add a new Tool to the `tools` property of the CodeX Editor initial config.
 
 ```javascript
-link: {
-    type             : 'link',
-    displayInToolbox : true,
-    iconClassname    : 'cdx-link-icon',
-    prepare          : cdxEditorLink.prepare,
-    render           : cdxEditorLink.render,
-    makeSettings     : cdxEditorLink.settings,
-    save             : cdxEditorLink.save,
-    destroy          : cdxEditorLink.destroy,
-    config: {
-        fetchURL: '/fetch',
-        defaultStyle : 'bigCover'
+var editor = CodexEditor({
+  ...
+
+  tools: {
+    ...
+    linkTool: {
+      class: LinkTool,
+      config: {
+        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching
+      }
+    }
+  }
+
+  ...
+});
+```
+
+## Config Params
+
+Link Tool supports these configuration parameters:
+
+| Field    | Type        | Description                                    |
+| ---------|-------------|------------------------------------------------|
+| endpoint | `string`    | **Required:** endpoint for link data fetching. |
+
+## Output data
+
+This Tool returns `data` with following format
+
+| Field          | Type      | Description                     |
+| -------------- | --------- | ------------------------------- |
+| link           | `string`  | Pasted link url                 |
+| meta           | `object`  | Fetched link data. Any data got from backend. Currently title, image and description are supported by plugin's design. |
+
+```json
+{
+    "type" : "linkTool",
+    "data" : {
+        "link" : "https://codex.so",
+        "meta" : {
+            "title" : "CodeX Team",
+            "site_name" : "CodeX",
+            "description" : "Club of web-development, design and marketing. We build team learning how to build full-valued projects on the world market.",
+            "image" : {
+                "url" : "https://codex.so/public/app/img/meta_img.png"
+            }
+        }
     }
 }
 ```
 
-```fetchURL``` - is important data. Plugin won't be initialized is you won't pass it
+## Backend response format <a name="server-format"></a>
 
-```defaultStyle``` - this item allows you to choose default embed style. By default it is ```smallCover```
+You can implement backend for link data fetching your own way. It is a specific and trivial task depending on your
+environment and stack.
 
-# Data requirements
+Backend response **should** cover following format:
 
-Plugin waits from server the following data:
-
-```javascript
+```json5
 {
-    "image" : "imageURL",
-    "title" : "embedTitle",
-    "desciption" : "embedDescription",
-    "linkText" : "link inscription",
-    "linkUrl" : "link url"
+    "success" : 1,
+    "meta": {
+        // ... any fields you want
+    }
 }
-````
+```
 
-# CodeX Editor
+**success** — uploading status. 1 for successful, 0 for failed
 
-API oriented, open-source, block-styled Editor.
+**meta** — link fetched data. 
 
-https://github.com/codex-team/codex.editor
-
-# Authors
-
-We are small and very ambitious team of Web-developing fans consisting of IFMO students and graduates located in St. Petersburg, Russia.
-Feel free to give us a feedback on team@ifmo.su
-
-https://ifmo.su
-
-Follow us!
-
-VK: https://vk.com/codex_team
-
-Telegram: https://t.me/codex_team
-
-Instagram: https://www.instagram.com/codex_team
+Currently title, image and description fields are supported by plugin's design . They should have the following format in the response:
+```json5
+{
+    "success" : 1,
+    "meta": {
+        "title" : "CodeX Team",
+        "description" : "Club of web-development, design and marketing. We build team learning how to build full-valued projects on the world market.",
+        "image" : {
+            "url" : "https://codex.so/public/app/img/meta_img.png"
+        }
+    }
+}
+```
+Also, can contain any additional fields you want to store. 
