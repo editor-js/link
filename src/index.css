@@ -96,6 +96,7 @@
   &__anchor {
     display: block;
     font-size: 15px;
+    margin-top: 15px;
     line-height: 1.55em;
     color: #888 !important;
     border: 0 !important;
