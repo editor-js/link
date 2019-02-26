@@ -48,7 +48,7 @@ export default class LinkTool {
   /**
    * @param {LinkToolData} data - previously saved data
    * @param {config} config - user config for Tool
-   * @param {object} api - CodeX Editor API
+   * @param {object} api - Editor.js API
    */
   constructor({ data, config, api }) {
     this.api = api;
