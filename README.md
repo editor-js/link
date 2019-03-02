@@ -1,8 +1,8 @@
-![](https://badgen.net/badge/CodeX%20Editor/v2.0/blue)
+![](https://badgen.net/badge/Editor.js/v2.0/blue)
 
 # Link Tool
 
-Link Block for the [CodeX Editor](https://codex.so/editor).
+Link Block for the [Editor.js](https://codex.so/editor).
 
 ![](src/gif/demo.gif)
 
@@ -19,13 +19,13 @@ Allows to add link previews to your articles.
 Get the package
 
 ```shell
-npm i --save-dev codex.editor.link
+npm i --save-dev @editorjs/link
 ```
 
 Include module at your application
 
 ```javascript
-const LinkTool = require('codex.editor.link');
+const LinkTool = require('@editorjs/link');
 ```
 
 ### Download to your project's source dir
@@ -35,18 +35,18 @@ const LinkTool = require('codex.editor.link');
 
 ### Load from CDN
 
-You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/codex.editor.link).
+You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/link).
 
-`https://cdn.jsdelivr.net/npm/codex.editor.link@2.0.0`
+`https://cdn.jsdelivr.net/npm/@editorjs/link@2.0.0`
 
-Then require this script on page with CodeX Editor through the `<script src=""></script>` tag.
+Then require this script on page with Editor.js through the `<script src=""></script>` tag.
 
 ## Usage
 
-Add a new Tool to the `tools` property of the CodeX Editor initial config.
+Add a new Tool to the `tools` property of the Editor.js initial config.
 
 ```javascript
-var editor = CodexEditor({
+var editor = EditorJS({
   ...
 
   tools: {
