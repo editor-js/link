@@ -181,6 +181,12 @@ export default class LinkTool {
     this.nodes.input.dataset.placeholder = 'Link';
 
     this.nodes.input.addEventListener('paste', (event) => {
+      event.stopImmediatePropagation();
+
+      const url = (event.clipboardData || window.clipboardData).getData('text');
+
+      document.execCommand('insertText', false, url);
+
       this.startFetching(event);
     });
 
