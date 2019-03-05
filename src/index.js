@@ -181,12 +181,6 @@ export default class LinkTool {
     this.nodes.input.dataset.placeholder = 'Link';
 
     this.nodes.input.addEventListener('paste', (event) => {
-      event.stopImmediatePropagation();
-
-      const url = (event.clipboardData || window.clipboardData).getData('text');
-
-      document.execCommand('insertText', false, url);
-
       this.startFetching(event);
     });
 
@@ -196,6 +190,9 @@ export default class LinkTool {
 
       switch (event.keyCode) {
         case ENTER:
+          event.preventDefault();
+          event.stopPropagation();
+
           this.startFetching(event);
           break;
         case A:
@@ -216,8 +213,6 @@ export default class LinkTool {
    * Activates link data fetching by url
    */
   startFetching(event) {
-    event.preventDefault();
-
     let url = this.nodes.input.textContent;
 
     if (event.type === 'paste') {
