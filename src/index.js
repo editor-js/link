@@ -277,21 +277,21 @@ export default class LinkTool {
 
   /**
    * Compose link preview from fetched data
-   * @param meta - link meta data
+   * @param {image, title, description} - link meta data
    */
-  showLinkPreview(meta) {
+  showLinkPreview({ image, title, description }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
-    if (meta.image) {
-      this.nodes.linkImage.style.backgroundImage = 'url(' + meta.image.url + ')';
+    if (image && image.url) {
+      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
     }
 
-    if (meta.title) {
-      this.nodes.linkTitle.textContent = meta.title;
+    if (title) {
+      this.nodes.linkTitle.textContent = title;
     }
 
-    if (meta.description) {
-      this.nodes.linkDescription.textContent = meta.description;
+    if (description) {
+      this.nodes.linkDescription.textContent = description;
     }
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
@@ -366,6 +366,11 @@ export default class LinkTool {
     const metaData = response.meta;
 
     this.data = { meta: metaData };
+
+    if (!metaData) {
+      this.fetchingFailed('Wrong response format from server');
+      return;
+    }
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
