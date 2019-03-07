@@ -367,7 +367,7 @@ export default class LinkTool {
 
     this.data = { meta: metaData };
 
-    if (!metaData) {
+    if (!metaData || !metaData.title) {
       this.fetchingFailed('Wrong response format from server');
       return;
     }
