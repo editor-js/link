@@ -68,8 +68,8 @@
   &__image {
     background-position: center center;
     background-repeat: no-repeat;
+    background-size: cover;
     margin: 0 0 30px 30px;
-    background-size: auto 100%;
     width: 70px;
     height: 70px;
     border-radius: 3px;
