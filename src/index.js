@@ -275,11 +275,6 @@ export default class LinkTool {
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
     this.nodes.linkText = this.make('span', this.CSS.linkText);
 
-    holder.appendChild(this.nodes.linkImage);
-    holder.appendChild(this.nodes.linkTitle);
-    holder.appendChild(this.nodes.linkDescription);
-    holder.appendChild(this.nodes.linkText);
-
     return holder;
   }
 
@@ -292,18 +287,22 @@ export default class LinkTool {
 
     if (image && image.url) {
       this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+      this.nodes.linkContent.appendChild(this.nodes.linkImage);
     }
 
     if (title) {
       this.nodes.linkTitle.textContent = title;
+      this.nodes.linkContent.appendChild(this.nodes.linkTitle);
     }
 
     if (description) {
       this.nodes.linkDescription.textContent = description;
+      this.nodes.linkContent.appendChild(this.nodes.linkDescription);
     }
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     this.nodes.linkContent.setAttribute('href', this.data.link);
+    this.nodes.linkContent.appendChild(this.nodes.linkText);
 
     try {
       this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
@@ -375,7 +374,7 @@ export default class LinkTool {
 
     this.data = { meta: metaData };
 
-    if (!metaData || !metaData.title) {
+    if (!metaData) {
       this.fetchingFailed('Wrong response format from server');
       return;
     }
