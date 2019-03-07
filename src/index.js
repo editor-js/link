@@ -2,7 +2,15 @@
  * @typedef {object} LinkToolData
  * @description Link Tool's input and output data format
  * @property {string} link — data url
- * @property {object} meta — fetched link data
+ * @property {metaData} meta — fetched link data
+ */
+
+/**
+ * @typedef {Object} metaData
+ * @description Fetched link meta data
+ * @property {string} image - link's meta image
+ * @property {string} title - link's meta title
+ * @property {string} description - link's description
  */
 
 // eslint-disable-next-line
@@ -16,7 +24,7 @@ import polyfill from 'url-polyfill';
  * @typedef {object} UploadResponseFormat
  * @description This format expected from backend on link data fetching
  * @property {number} success  - 1 for successful uploading, 0 for failure
- * @property {object} meta - Object with link data.
+ * @property {metaData} meta - Object with link data.
  *
  * Tool may have any data provided by backend, currently are supported by design:
  * title, description, image, url
@@ -267,35 +275,34 @@ export default class LinkTool {
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
     this.nodes.linkText = this.make('span', this.CSS.linkText);
 
-    holder.appendChild(this.nodes.linkImage);
-    holder.appendChild(this.nodes.linkTitle);
-    holder.appendChild(this.nodes.linkDescription);
-    holder.appendChild(this.nodes.linkText);
-
     return holder;
   }
 
   /**
    * Compose link preview from fetched data
-   * @param meta - link meta data
+   * @param {metaData} meta - link meta data
    */
-  showLinkPreview(meta) {
+  showLinkPreview({ image, title, description }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
-    if (meta.image) {
-      this.nodes.linkImage.style.backgroundImage = 'url(' + meta.image.url + ')';
+    if (image && image.url) {
+      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+      this.nodes.linkContent.appendChild(this.nodes.linkImage);
     }
 
-    if (meta.title) {
-      this.nodes.linkTitle.textContent = meta.title;
+    if (title) {
+      this.nodes.linkTitle.textContent = title;
+      this.nodes.linkContent.appendChild(this.nodes.linkTitle);
     }
 
-    if (meta.description) {
-      this.nodes.linkDescription.textContent = meta.description;
+    if (description) {
+      this.nodes.linkDescription.textContent = description;
+      this.nodes.linkContent.appendChild(this.nodes.linkDescription);
     }
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     this.nodes.linkContent.setAttribute('href', this.data.link);
+    this.nodes.linkContent.appendChild(this.nodes.linkText);
 
     try {
       this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
@@ -366,6 +373,11 @@ export default class LinkTool {
     const metaData = response.meta;
 
     this.data = { meta: metaData };
+
+    if (!metaData) {
+      this.fetchingFailed('Wrong response format from server');
+      return;
+    }
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
