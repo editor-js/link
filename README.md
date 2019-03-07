@@ -4,7 +4,7 @@
 
 Link Block for the [Editor.js](https://codex.so/editor).
 
-![](src/gif/demo.gif)
+![](assets/gif/demo.gif)
 
 ## Features
 
