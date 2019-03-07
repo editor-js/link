@@ -277,7 +277,7 @@ export default class LinkTool {
 
   /**
    * Compose link preview from fetched data
-   * @param {image, title, description} - link meta data
+   * @param {object} meta - link meta data
    */
   showLinkPreview({ image, title, description }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
