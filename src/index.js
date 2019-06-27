@@ -353,7 +353,7 @@ export default class LinkTool {
         headers: {
           'Authorization': `Bearer ${this.config.token}`
         },
-        body: {
+        data: {
           url
         }
       }));
