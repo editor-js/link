@@ -374,7 +374,7 @@ export default class LinkTool {
       return;
     }
 
-    const metaData = response.meta;
+    const metaData = response;
 
     this.data = { meta: metaData };
 
