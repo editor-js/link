@@ -373,7 +373,7 @@ export default class LinkTool {
       this.fetchingFailed('Can not get this link data, try another');
       return;
     }
-
+    console.log(response);
     const metaData = response;
 
     this.data = { meta: metaData };
