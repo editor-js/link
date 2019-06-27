@@ -286,8 +286,8 @@ export default class LinkTool {
   showLinkPreview({ image, title, description }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
-    if (image && image.url) {
-      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+    if (image) {
+      this.nodes.linkImage.style.backgroundImage = 'url(' + image + ')';
       this.nodes.linkContent.appendChild(this.nodes.linkImage);
     }
 
