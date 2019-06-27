@@ -370,7 +370,7 @@ export default class LinkTool {
    */
   onFetch(response) {
     console.log(response);
-    if (!response || !response.success) {
+    if (!response) {
       this.fetchingFailed('Can not get this link data, try another');
       return;
     }
