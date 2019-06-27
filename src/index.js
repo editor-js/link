@@ -65,7 +65,8 @@ export default class LinkTool {
      * Tool's initial config
      */
     this.config = {
-      endpoint: config.endpoint || ''
+      endpoint: config.endpoint || '',
+      token: config.token
     };
 
     this.nodes = {
@@ -347,9 +348,12 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const response = await (ajax.get({
+      const response = await (ajax.post({
         url: this.config.endpoint,
-        data: {
+        headers: {
+          'Authorization': `Bearer ${this.config.token}`
+        },
+        body: {
           url
         }
       }));
@@ -408,7 +412,7 @@ export default class LinkTool {
    * @return {HTMLElement}
    */
   make(tagName, classNames = null, attributes = {}) {
-    let el = document.createElement(tagName);
+    const el = document.createElement(tagName);
 
     if (Array.isArray(classNames)) {
       el.classList.add(...classNames);
@@ -416,7 +420,7 @@ export default class LinkTool {
       el.classList.add(classNames);
     }
 
-    for (let attrName in attributes) {
+    for (const attrName in attributes) {
       el[attrName] = attributes[attrName];
     }
 
