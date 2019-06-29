@@ -40,7 +40,7 @@ export default class LinkTool {
   static get toolbox() {
     return {
       icon: ToolboxIcon,
-      title: 'Link'
+      title: 'bookmark link'
     };
   }
 
