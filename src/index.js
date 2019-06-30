@@ -16,6 +16,8 @@
 // eslint-disable-next-line
 import css from './index.css';
 import ToolboxIcon from './svg/toolbox.svg';
+import ToolboxIconError from './svg/toolbox_error.svg';
+
 import ajax from '@codexteam/ajax';
 // eslint-disable-next-line
 import polyfill from 'url-polyfill';
@@ -73,6 +75,7 @@ export default class LinkTool {
       wrapper: null,
       container: null,
       progress: null,
+      img: null,
       input: null,
       inputHolder: null,
       linkContent: null,
@@ -99,10 +102,12 @@ export default class LinkTool {
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
-
+    this.nodes.img = this.make('div', 'input-img');
+    this.nodes.img.innerHTML = `${ToolboxIcon}`;
     this.nodes.inputHolder = this.makeInputHolder();
+    this.nodes.inputHolder.prepend(this.nodes.img);
     this.nodes.linkContent = this.prepareLinkPreview();
-
+    //
     /**
      * If Tool already has data, render link preview, otherwise insert input
      */
@@ -187,7 +192,7 @@ export default class LinkTool {
       contentEditable: true
     });
 
-    this.nodes.input.dataset.placeholder = 'Link';
+    this.nodes.input.dataset.placeholder = 'Enter link';
 
     this.nodes.input.addEventListener('paste', (event) => {
       this.startFetching(event);
@@ -337,6 +342,7 @@ export default class LinkTool {
   applyErrorStyle() {
     this.nodes.inputHolder.classList.add(this.CSS.inputError);
     this.nodes.progress.remove();
+    this.nodes.img.innerHTML = `${ToolboxIconError}`;
   }
 
   /**
