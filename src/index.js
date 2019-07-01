@@ -164,7 +164,7 @@ export default class LinkTool {
       /**
        * Tool's classes
        */
-      container: 'link-tool',
+      container: 'bookmark-link__tool',
       inputEl: 'link-tool__input',
       inputHolder: 'link-tool__input-holder',
       inputError: 'link-tool__input-holder--error',
@@ -290,6 +290,7 @@ export default class LinkTool {
    */
   showLinkPreview({ image, title, description }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
+    this.nodes.container.classList.add('link-tool');
 
     if (image) {
       this.nodes.linkImage.style.backgroundImage = 'url(' + image + ')';
