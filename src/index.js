@@ -343,7 +343,7 @@ export default class LinkTool {
    * @param {string} url - link source url
    */
   async fetchLinkData(url) {
-        if (!~(url.indexOf('.'))) {
+    if (!~(url.indexOf('.'))) {
       return
     }
     if (!/^https?:\/\//.test(url)) {
