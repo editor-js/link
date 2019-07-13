@@ -343,6 +343,17 @@ export default class LinkTool {
    * @param {string} url - link source url
    */
   async fetchLinkData(url) {
+        if (!~(url.indexOf('.'))) {
+      return
+    }
+    if (!/^https?:\/\//.test(url)) {
+      url = 'https://' + url
+    }
+    try {
+      new URL(url) // eslint-disable-line
+    } catch (e) {
+      return
+    }
     this.showProgress();
     this.data = { link: url };
 
