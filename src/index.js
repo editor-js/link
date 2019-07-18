@@ -381,7 +381,6 @@ export default class LinkTool {
    * @param {UploadResponseFormat} response
    */
   onFetch(response) {
-    console.log(response);
     if (!response) {
       this.fetchingFailed('Can not get this link data, try another');
       return;
