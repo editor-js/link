@@ -101,7 +101,6 @@ export default class LinkTool {
    */
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
-    console.log(this.nodes.wrapper);
     this.nodes.wrapper.classList.add('bookmark-link__tool');
     this.nodes.container = this.make('div', this.CSS.container);
     this.nodes.img = this.make('div', 'input-img');
@@ -306,10 +305,12 @@ export default class LinkTool {
       this.nodes.linkDescription.appendChild(this.nodes.linkTitle);
     }
 
-    // if (description) {
-    //   this.nodes.linkDescription.textContent = description;
-    //   this.nodes.linkContent.appendChild(this.nodes.linkDescription);
-    // }
+    /*
+     * if (description) {
+     *   this.nodes.linkDescription.textContent = description;
+     *   this.nodes.linkContent.appendChild(this.nodes.linkDescription);
+     * }
+     */
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     this.nodes.linkContent.setAttribute('href', this.data.link);
