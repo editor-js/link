@@ -65,7 +65,8 @@ export default class LinkTool {
      * Tool's initial config
      */
     this.config = {
-      endpoint: config.endpoint || ''
+      endpoint: config.endpoint || '',
+      onClick: config.onClick || null
     };
 
     this.nodes = {
@@ -270,6 +271,13 @@ export default class LinkTool {
       rel: 'nofollow noindex noreferrer'
     });
 
+    if (this.config.onClick) {
+      holder.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.config.onClick(this._data);
+      });
+    }
+
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
     this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
@@ -408,7 +416,7 @@ export default class LinkTool {
    * @return {HTMLElement}
    */
   make(tagName, classNames = null, attributes = {}) {
-    let el = document.createElement(tagName);
+    const el = document.createElement(tagName);
 
     if (Array.isArray(classNames)) {
       el.classList.add(...classNames);
@@ -416,7 +424,7 @@ export default class LinkTool {
       el.classList.add(classNames);
     }
 
-    for (let attrName in attributes) {
+    for (const attrName in attributes) {
       el[attrName] = attributes[attrName];
     }
 
