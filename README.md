@@ -55,6 +55,7 @@ var editor = EditorJS({
       class: LinkTool,
       config: {
         endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching
+        onClick: (data) => console.log(data) //handle what happens on click
       }
     }
   }
@@ -67,9 +68,10 @@ var editor = EditorJS({
 
 Link Tool supports these configuration parameters:
 
-| Field    | Type        | Description                                    |
-| ---------|-------------|------------------------------------------------|
-| endpoint | `string`    | **Required:** endpoint for link data fetching. |
+| Field    | Type                       | Description                                    |
+| ---------|----------------------------|------------------------------------------------|
+| endpoint | `string`                   | **Required:** endpoint for link data fetching. |
+| onClick  | (data_from_bellow): void   | Custom click handle.                           |
 
 ## Output data
 
