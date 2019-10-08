@@ -68,7 +68,9 @@ export default class LinkTool {
      */
     this.config = {
       endpoint: config.endpoint || '',
-      token: config.token
+      token: config.token,
+      skill: config.skill,
+      materialEndpoint: config.material_endpoint
     };
 
     this.nodes = {
@@ -321,6 +323,33 @@ export default class LinkTool {
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
+    this.nodes.linkContent.addEventListener('click', () => {
+      this.sendMaterial(this.nodes.linkContent.href).then(res => {
+        console.log(res);
+      });
+    });
+    console.log(this.nodes.linkContent);
+  }
+  /**
+   * Send material to skill
+   */
+  async sendMaterial(url) {
+    try {
+      const response = await (ajax.post({
+        url: this.config.materialEndpoint,
+        headers: {
+          'Authorization': `Bearer ${this.config.token}`
+        },
+        data: {
+          url,
+          skill: this.config.skill
+        }
+      }));
+
+      return response;
+    } catch (error) {
+      this.fetchingFailed('Haven\'t received data from server');
+    };
   }
 
   /**
