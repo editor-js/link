@@ -102,7 +102,7 @@ export default class LinkTool {
    * @return {HTMLDivElement}
    */
   render() {
-    this.nodes.wrapper = this.make('div', this.CSS.baseClass);
+    this.nodes.wrapper = this.make('linktool', this.CSS.baseClass);
     this.nodes.wrapper.classList.add('bookmark-link__tool');
     this.nodes.container = this.make('div', this.CSS.container);
     this.nodes.img = this.make('div', 'input-img');
@@ -122,6 +122,12 @@ export default class LinkTool {
     }
 
     this.nodes.wrapper.appendChild(this.nodes.container);
+
+    if (this.nodes.container.firstChild.attributes.getNamedItem('href')) {
+      const getWrapperUrlAttr = this.nodes.container.firstChild.attributes.getNamedItem('href').value;
+
+      this.nodes.wrapper.setAttribute('url', getWrapperUrlAttr);
+    }
 
     return this.nodes.wrapper;
   }
@@ -325,10 +331,8 @@ export default class LinkTool {
     }
     this.nodes.linkContent.addEventListener('click', () => {
       this.sendMaterial(this.nodes.linkContent.href).then(res => {
-        console.log(res);
       });
     });
-    console.log(this.nodes.linkContent);
   }
   /**
    * Send material to skill
@@ -349,7 +353,7 @@ export default class LinkTool {
       return response;
     } catch (error) {
       this.fetchingFailed('Haven\'t received data from server');
-    };
+    }
   }
 
   /**
@@ -426,6 +430,11 @@ export default class LinkTool {
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
       this.showLinkPreview(metaData);
+      if (this.nodes.container.firstChild.attributes) {
+        const getWrapperUrlAttr = this.nodes.container.firstChild.attributes.getNamedItem('href').value;
+
+        this.nodes.wrapper.setAttribute('url', getWrapperUrlAttr);
+      }
     });
   }
 
@@ -465,5 +474,47 @@ export default class LinkTool {
     }
 
     return el;
+  }
+
+  /**
+   * Specify paste substitutes
+   *
+   * @see {@link https://github.com/codex-team/editor.js/blob/master/docs/tools.md#paste-handling}
+   */
+  static get pasteConfig() {
+    return {
+      /**
+       * Paste HTML into Editor
+       */
+      tags: [ 'LINKTOOL' ]
+
+      /**
+       * Paste URL of image into the Editor
+       */
+      // patterns: {
+      //   image: /https?:\/\/\S+\.(gif|jpe?g|tiff|png)$/i
+      // }
+
+      /**
+       * Drag n drop file from into the Editor
+       */
+    };
+  }
+
+  /**
+   * Specify paste handlers
+   * @public
+   *
+   * @see {@link https://github.com/codex-team/editor.js/blob/master/docs/tools.md#paste-handling}
+   */
+  onPaste(event) {
+    switch (event.type) {
+      case 'tag':
+        const urlValue = event.detail.data.attributes.getNamedItem('url').value;
+
+        this.fetchLinkData(urlValue);
+
+        break;
+    }
   }
 }
