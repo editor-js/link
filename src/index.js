@@ -59,6 +59,13 @@ export default class LinkTool {
    * @param {object} api - Editor.js API
    */
   constructor({ data, config, api }) {
+    this.settings = [
+      {
+        name: 'blank',
+        icon: '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path transform="rotate(-90.0 10,9) " d="m15.085985,7.817857l0,-3.581165q0,-1.331746 -0.831867,-2.277397q-0.831867,-0.945651 -2.003372,-0.945651l-8.190689,0q-1.171505,0 -2.003372,0.945651q-0.831867,0.945651 -0.831867,2.277397l0,9.311029q0,1.331746 0.831867,2.277397q0.831867,0.945651 2.003372,0.945651l6.930583,0q0.137824,0 0.226425,-0.10072q0.088601,-0.10072 0.088601,-0.257396l0,-0.716233q0,-0.156676 -0.088601,-0.257396q-0.088601,-0.10072 -0.226425,-0.10072l-6.930583,0q-0.649742,0 -1.112437,-0.525984q-0.462695,-0.525984 -0.462695,-1.264599l0,-9.311029q0,-0.738615 0.462695,-1.264599q0.462695,-0.525984 1.112437,-0.525984l8.190689,0q0.649742,0 1.112437,0.525984q0.462695,0.525984 0.462695,1.264599l0,3.581165q0,0.156676 0.088601,0.257396q0.088601,0.10072 0.226425,0.10072l0.630053,0q0.137824,0 0.226425,-0.10072q0.088601,-0.10072 0.088601,-0.257396l0.000002,0zm3.780318,9.669145l0,-5.729864q0,-0.29097 -0.187047,-0.503601q-0.187047,-0.212632 -0.443006,-0.212632q-0.255959,0 -0.443006,0.212632l-1.732646,1.969641l-6.418665,-7.296624q-0.098446,-0.111911 -0.226425,-0.111911q-0.12798,0 -0.226425,0.111911l-1.122282,1.27579q-0.098446,0.111911 -0.098446,0.257396q0,0.145485 0.098446,0.257396l6.418665,7.296624l-1.732646,1.969641q-0.187047,0.212632 -0.187047,0.503601q0,0.29097 0.187047,0.503601q0.187047,0.212632 0.443006,0.212632l5.040424,0q0.255959,0 0.443006,-0.212632q0.187047,-0.212632 0.187047,-0.503601z"/></svg>'
+      }
+    ];
+
     this.api = api;
 
     /**
@@ -83,7 +90,8 @@ export default class LinkTool {
 
     this._data = {
       link: '',
-      meta: {}
+      meta: {},
+      blank: false
     };
 
     this.data = data;
@@ -134,7 +142,8 @@ export default class LinkTool {
   set data(data) {
     this._data = Object.assign({}, {
       link: data.link || this._data.link,
-      meta: data.meta || this._data.meta
+      meta: data.meta || this._data.meta,
+      blank: data.blank || this._data.blank
     });
   }
 
@@ -408,7 +417,7 @@ export default class LinkTool {
    * @return {HTMLElement}
    */
   make(tagName, classNames = null, attributes = {}) {
-    let el = document.createElement(tagName);
+    const el = document.createElement(tagName);
 
     if (Array.isArray(classNames)) {
       el.classList.add(...classNames);
@@ -416,10 +425,44 @@ export default class LinkTool {
       el.classList.add(classNames);
     }
 
-    for (let attrName in attributes) {
+    for (const attrName in attributes) {
       el[attrName] = attributes[attrName];
     }
 
     return el;
+  }
+
+  /**
+   * Generate the options menu
+   * @return {wrapper}
+   */
+  renderSettings() {
+    const wrapper = document.createElement('div');
+
+    this.settings.forEach(tune => {
+      const button = document.createElement('div');
+
+      button.classList.add('cdx-settings-button');
+      button.classList.toggle('cdx-settings-button--active', this.data[tune.name]);
+
+      button.innerHTML = tune.icon;
+      wrapper.appendChild(button);
+
+      button.addEventListener('click', () => {
+        button.classList.toggle('cdx-settings-button--active');
+        this._toggleTune(tune.name);
+      });
+    });
+
+    return wrapper;
+  }
+
+  /**
+   * @private
+   * Click on the Settings Button
+   * @param {string} tune — tune name from this.settings
+   */
+  _toggleTune(tune) {
+    this.data[tune] = !this.data[tune];
   }
 }
