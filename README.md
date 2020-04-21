@@ -115,9 +115,11 @@ Backend response **should** cover following format:
 
 **success** — uploading status. 1 for successful, 0 for failed
 
-**meta** — link fetched data. 
+**link** — pasted link can be updated (e.g. after redirects)
 
-Currently title, image, description and url fields are supported by plugin's design. They should have the following format in the response:
+**meta** — link fetched data
+
+Currently **link**, **title**, **image** and **description** fields are supported by plugin's design. They should have the following format in the response:
 ```json5
 {
     "success" : 1,
