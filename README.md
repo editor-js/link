@@ -69,7 +69,10 @@ Link Tool supports these configuration parameters:
 
 | Field    | Type        | Description                                    |
 | ---------|-------------|------------------------------------------------|
-| endpoint | `string`    | **Required:** endpoint for link data fetching. |
+| endpoint | `string`    | Endpoint for link data fetching. |
+| fetcher | `{{fetchLinkDataForUrl: function}}`    | Optional custom fetch function. See details below. |
+
+Note that if you don't implement your custom fetch method, the `endpoint` parameter is required.
 
 ## Output data
 
@@ -131,3 +134,6 @@ Currently title, image and description fields are supported by plugin's design .
 }
 ```
 Also, can contain any additional fields you want to store. 
+
+## Providing custom fetch method
+You have the option to provide your own custom fetch method. Use the `fetcher` config parameter with an object with a `fetchLinkDataForUrl` method that takes the url as a parameter and returns a Promise that resolves with response in the format described above.
