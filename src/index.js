@@ -65,7 +65,8 @@ export default class LinkTool {
      * Tool's initial config
      */
     this.config = {
-      endpoint: config.endpoint || ''
+      endpoint: config.endpoint || '',
+      fetcher: config.fetcher || undefined
     };
 
     this.nodes = {
@@ -347,13 +348,18 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const response = await (ajax.get({
-        url: this.config.endpoint,
-        data: {
-          url
-        }
-      }));
+      let response;
 
+      if (this.config.fetcher && typeof this.config.fetcher.fetchLinkDataForUrl === 'function') {
+        response = await (this.config.fetcher.fetchLinkDataForUrl(url));
+      } else {
+        response = await (ajax.get({
+          url: this.config.endpoint,
+          data: {
+            url
+          }
+        }));
+      }
       this.onFetch(response);
     } catch (error) {
       this.fetchingFailed('Haven\'t received data from server');
