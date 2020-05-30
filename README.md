@@ -98,7 +98,7 @@ This Tool returns `data` with following format
 ```
 
 ## Backend response format <a name="server-format"></a>
-
+This tool makes a get request for the endpoint provided in the config and on backend you can send a response.
 You can implement backend for link data fetching your own way. It is a specific and trivial task depending on your
 environment and stack.
 
