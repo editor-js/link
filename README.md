@@ -8,7 +8,7 @@ Link Block for the [Editor.js](https://codex.so/editor).
 
 ## Features
 
-Allows to add link previews to your articles.
+Allows adding link previews to your articles.
 
 **Note:** this Tool requires server-side implementation for link data fetching. See [backend response format](#server-format) for more details.
 
@@ -35,7 +35,7 @@ const LinkTool = require('@editorjs/link');
 
 ### Load from CDN
 
-You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/link).
+You can load the specific version of a package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/link).
 
 `https://cdn.jsdelivr.net/npm/@editorjs/link@2.0.0`
 
@@ -46,7 +46,7 @@ Then require this script on page with Editor.js through the `<script src=""></sc
 Add a new Tool to the `tools` property of the Editor.js initial config.
 
 ```javascript
-var editor = EditorJS({
+const editor = EditorJS({
   ...
 
   tools: {
@@ -57,7 +57,7 @@ var editor = EditorJS({
         endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching
       }
     }
-  }
+  },
 
   ...
 });
@@ -69,7 +69,7 @@ Link Tool supports these configuration parameters:
 
 | Field    | Type        | Description                                    |
 | ---------|-------------|------------------------------------------------|
-| endpoint | `string`    | **Required:** endpoint for link data fetching. |
+| endpoint | `string`    | **Required:** the endpoint for link data fetching. |
 
 ## Output data
 
@@ -77,8 +77,8 @@ This Tool returns `data` with following format
 
 | Field          | Type      | Description                     |
 | -------------- | --------- | ------------------------------- |
-| link           | `string`  | Pasted link url                 |
-| meta           | `object`  | Fetched link data. Any data got from backend. Currently title, image and description are supported by plugin's design. |
+| link           | `string`  | Pasted link's url               |
+| meta           | `object`  | Fetched link's data. Any data got from the backend. Currently, the plugin's design supports the 'title', 'image', and 'description' fields. |
 
 ```json
 {
@@ -99,7 +99,7 @@ This Tool returns `data` with following format
 
 ## Backend response format <a name="server-format"></a>
 
-You can implement backend for link data fetching your own way. It is a specific and trivial task depending on your
+You can implement a backend for link data fetching your own way. It is a specific and trivial task depending on your
 environment and stack.
 
 Backend response **should** cover following format:
@@ -115,9 +115,10 @@ Backend response **should** cover following format:
 
 **success** — uploading status. 1 for successful, 0 for failed
 
-**meta** — link fetched data. 
+**meta** — link fetched data.
 
-Currently title, image and description fields are supported by plugin's design . They should have the following format in the response:
+Currently, the plugin's design supports the 'title', 'image', and 'description' fields. They should have the following format in the response:
+
 ```json5
 {
     "success" : 1,
@@ -130,4 +131,5 @@ Currently title, image and description fields are supported by plugin's design .
     }
 }
 ```
-Also, can contain any additional fields you want to store. 
+
+Also, it can contain any additional fields you want to store.

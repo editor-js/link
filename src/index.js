@@ -186,7 +186,7 @@ export default class LinkTool {
       contentEditable: true
     });
 
-    this.nodes.input.dataset.placeholder = 'Link';
+    this.nodes.input.dataset.placeholder = this.api.i18n.t('Link');
 
     this.nodes.input.addEventListener('paste', (event) => {
       this.startFetching(event);
@@ -356,7 +356,7 @@ export default class LinkTool {
 
       this.onFetch(response);
     } catch (error) {
-      this.fetchingFailed('Haven\'t received data from server');
+      this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
     }
   }
 
@@ -366,7 +366,7 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed('Can not get this link data, try another');
+      this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
       return;
     }
 
@@ -375,7 +375,7 @@ export default class LinkTool {
     this.data = { meta: metaData };
 
     if (!metaData) {
-      this.fetchingFailed('Wrong response format from server');
+      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
       return;
     }
 

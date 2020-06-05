@@ -1,6 +1,6 @@
 {
   "name": "@editorjs/link",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "keywords": [
     "codex editor",
     "tool",
@@ -19,33 +19,33 @@
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development --watch"
   },
-  "author": "CodeX <team@ifmo.su>",
+  "author": "CodeX <team@codex.so>",
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.4",
-    "@codexteam/ajax": "^3.2.1",
-    "babel-loader": "^8.0.5",
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@codexteam/ajax": "^4.1.0",
+    "babel-loader": "^8.1.0",
     "babel-preset-env": "^1.7.0",
-    "css-loader": "^1.0.0",
-    "eslint": "^5.9.0",
-    "eslint-config-codex": "github:codex-team/eslint-config",
-    "eslint-loader": "^2.1.1",
+    "css-loader": "^3.5.3",
+    "eslint": "^7.1.0",
+    "eslint-config-codex": "^1.3.6",
+    "eslint-loader": "^4.0.2",
     "open-graph": "^0.2.4",
     "postcss-loader": "^3.0.0",
-    "postcss-nested": "^4.1.0",
+    "postcss-nested": "^4.2.1",
     "postcss-nested-ancestors": "^2.0.0",
-    "style-loader": "^0.21.0",
-    "svg-inline-loader": "^0.8.0",
-    "url-polyfill": "^1.1.3",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
+    "style-loader": "^1.2.1",
+    "svg-inline-loader": "^0.8.2",
+    "url-polyfill": "^1.1.9",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   },
   "bugs": {
     "url": "https://github.com/editor-js/link/issues"
   },
   "homepage": "https://github.com/editor-js/link#readme",
   "dependencies": {
-    "@babel/runtime": "^7.3.1"
+    "@babel/runtime": "^7.10.2"
   }
 }

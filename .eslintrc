@@ -1,9 +1,13 @@
 {
-    "extends": [
-        "codex"
-    ],
-
-    "globals": {
-        "Range" : true
+  "extends": [
+    "codex"
+  ],
+  "settings": {
+    "jsdoc": {
+      "mode": "javascript"
     }
+  },
+  "globals": {
+    "Range" : true
+  }
 }
