@@ -347,14 +347,14 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const response = await (ajax.get({
+      const { body } = await (ajax.get({
         url: this.config.endpoint,
         data: {
           url
         }
       }));
 
-      this.onFetch(response);
+      this.onFetch(body);
     } catch (error) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
     }
