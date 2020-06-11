@@ -5,7 +5,7 @@ on:
     branches:
       - master
 
-jobs:  
+jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
@@ -14,8 +14,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/ 
-      - run: yarn 
-      - run: yarn build 
+      - run: yarn
+      - run: yarn build
       - run: yarn publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
