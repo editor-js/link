@@ -1,0 +1,40 @@
+name: Publish package to NPM and GitHub
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      ### Publish to NPM ###
+
+      # Setup .npmrc file
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/ 
+      - run: yarn
+      - run: yarn build
+
+      # Publish
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      ### Publish to GitHub Packages ###
+
+      # Setup .npmrc file
+      - uses: actions/setup-node@v1
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@editorjs'
+
+      # Publish
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
