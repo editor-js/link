@@ -156,7 +156,7 @@ export default class LinkTool {
   /**
    * Return Tool data
    *
-   * @returns {LinkToolData} data
+   * @returns {LinkToolData}
    */
   get data() {
     return this._data;
@@ -164,7 +164,6 @@ export default class LinkTool {
 
   /**
    * @returns {object} - Link Tool styles
-   * @class
    */
   get CSS() {
     return {
@@ -193,7 +192,7 @@ export default class LinkTool {
   /**
    * Prepare input holder
    *
-   * @returns {HTMLElement} - url input
+   * @returns {HTMLElement}
    */
   makeInputHolder() {
     const inputHolder = this.make('div', this.CSS.inputHolder);
@@ -239,7 +238,7 @@ export default class LinkTool {
   /**
    * Activates link data fetching by url
    *
-   * @param event
+   * @param {PasteEvent} event
    */
   startFetching(event) {
     let url = this.nodes.input.textContent;
