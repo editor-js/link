@@ -142,6 +142,18 @@ export default class LinkTool {
   }
 
   /**
+   * Validate Block data
+   * - check for emtiness
+   *
+   * @public
+   *
+   * @returns {boolean} false if saved data is not correct, otherwise true
+   */
+  validate() {
+    return this.data.link.trim() !== '';
+  }
+
+  /**
    * Stores all Tool's data
    *
    * @param {LinkToolData} data
