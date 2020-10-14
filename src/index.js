@@ -147,7 +147,7 @@ export default class LinkTool {
    *
    * @public
    *
-   * @returns {boolean} false if saved data is not correct, otherwise true
+   * @returns {boolean} false if saved data is incorrect, otherwise true
    */
   validate() {
     return this.data.link.trim() !== '';
