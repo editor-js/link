@@ -143,7 +143,7 @@ export default class LinkTool {
 
   /**
    * Validate Block data
-   * - check for emtiness
+   * - check if given link is an empty string or not.
    *
    * @public
    *
