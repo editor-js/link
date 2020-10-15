@@ -142,6 +142,18 @@ export default class LinkTool {
   }
 
   /**
+   * Validate Block data
+   * - check if given link is an empty string or not.
+   *
+   * @public
+   *
+   * @returns {boolean} false if saved data is incorrect, otherwise true
+   */
+  validate() {
+    return this.data.link.trim() !== '';
+  }
+
+  /**
    * Stores all Tool's data
    *
    * @param {LinkToolData} data
