@@ -82,7 +82,6 @@ module.exports = (env, argv) => {
         filename: 'bundle.js',
         library: 'LinkTool',
         libraryTarget: 'umd',
-        libraryExport: 'default' // BEWARE this line was ommitted by me and create me no output,no error https://github.com/webpack/webpack/issues/3929
     }
   };
 };
