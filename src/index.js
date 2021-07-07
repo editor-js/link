@@ -14,11 +14,11 @@
  */
 
 // eslint-disable-next-line
-import css from './index.css';
+import css from "./index.css";
 import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
 // eslint-disable-next-line
-import polyfill from 'url-polyfill';
+import polyfill from "url-polyfill";
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -60,7 +60,7 @@ export default class LinkTool {
    * @public
    */
   static get enableLineBreaks() {
-    return true;
+    return false;
   }
 
   /**
@@ -72,12 +72,14 @@ export default class LinkTool {
   constructor({ data, config, api, readOnly }) {
     this.api = api;
     this.readOnly = readOnly;
+    this.isDataSet = false;
 
     /**
      * Tool's initial config
      */
     this.config = {
       endpoint: config.endpoint || '',
+      allowMetaEdit: config.allowMetaEdit || false,
     };
 
     this.nodes = {
@@ -138,6 +140,11 @@ export default class LinkTool {
    * @returns {LinkToolData}
    */
   save() {
+    if (this.config.allowMetaEdit && this.isDataSet) {
+      this.data.meta.title = this.nodes.linkTitle.innerHTML;
+      this.data.meta.description = this.nodes.linkDescription.innerHTML;
+    }
+
     return this.data;
   }
 
@@ -159,10 +166,13 @@ export default class LinkTool {
    * @param {LinkToolData} data
    */
   set data(data) {
-    this._data = Object.assign({}, {
-      link: data.link || this._data.link,
-      meta: data.meta || this._data.meta,
-    });
+    this._data = Object.assign(
+      {},
+      {
+        link: data.link || this._data.link,
+        meta: data.meta || this._data.meta,
+      }
+    );
   }
 
   /**
@@ -299,15 +309,40 @@ export default class LinkTool {
    * @returns {HTMLElement}
    */
   prepareLinkPreview() {
-    const holder = this.make('a', this.CSS.linkContent, {
-      target: '_blank',
-      rel: 'nofollow noindex noreferrer',
-    });
+    let holder = null;
+
+    // if edit meta is allowed add as dev
+    if (this.config.allowMetaEdit) {
+      holder = this.make('div', this.CSS.linkContent);
+    } else {
+      // add as link
+      holder = this.make('a', this.CSS.linkContent, {
+        target: '_blank',
+        rel: 'nofollow noindex noreferrer',
+      });
+    }
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
-    this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
-    this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
-    this.nodes.linkText = this.make('span', this.CSS.linkText);
+    this.nodes.linkTitle = this.make('div', this.CSS.linkTitle, {
+      contentEditable: this.config.allowMetaEdit,
+    });
+    this.nodes.linkDescription = this.make('p', this.CSS.linkDescription, {
+      contentEditable: this.config.allowMetaEdit,
+    });
+
+    // if edit meta is allowed add as link
+    if (this.config.allowMetaEdit) {
+      this.nodes.linkText = this.make('a', this.CSS.linkText, {
+        target: '_blank',
+        rel: 'nofollow noindex noreferrer',
+      });
+    } else {
+      // add as span
+      this.nodes.linkText = this.make('span', this.CSS.linkText);
+    }
+
+    // Mark as data is set
+    this.isDataSet = true;
 
     return holder;
   }
@@ -325,22 +360,34 @@ export default class LinkTool {
       this.nodes.linkContent.appendChild(this.nodes.linkImage);
     }
 
-    if (title) {
-      this.nodes.linkTitle.textContent = title;
+    if (title || this.config.allowMetaEdit) {
+      this.nodes.linkTitle.innerHTML = title;
+      this.nodes.linkTitle.dataset.placeholder =
+        this.api.i18n.t('Enter link title');
       this.nodes.linkContent.appendChild(this.nodes.linkTitle);
     }
 
-    if (description) {
-      this.nodes.linkDescription.textContent = description;
+    if (description || this.config.allowMetaEdit) {
+      this.nodes.linkDescription.innerHTML = description;
+      this.nodes.linkDescription.dataset.placeholder = this.api.i18n.t(
+        'Enter link description'
+      );
       this.nodes.linkContent.appendChild(this.nodes.linkDescription);
     }
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
-    this.nodes.linkContent.setAttribute('href', this.data.link);
+    // if edit meta is not allowed add href to link content holder
+    if (!this.allowMetaEdit) {
+      this.nodes.linkContent.setAttribute('href', this.data.link);
+    }
     this.nodes.linkContent.appendChild(this.nodes.linkText);
 
+    // if edit meta is allowed add href to link text
+    if (this.config.allowMetaEdit) {
+      this.nodes.linkText.setAttribute('href', this.data.link);
+    }
     try {
-      this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
+      this.nodes.linkText.textContent = new URL(this.data.link).hostname;
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
@@ -383,16 +430,16 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const { body } = await (ajax.get({
+      const { body } = await ajax.get({
         url: this.config.endpoint,
         data: {
           url,
         },
-      }));
+      });
 
       this.onFetch(body);
     } catch (error) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
+      this.fetchingFailed(this.api.i18n.t("Couldn't fetch the link data"));
     }
   }
 
@@ -403,7 +450,9 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
+      this.fetchingFailed(
+        this.api.i18n.t("Couldn't get this link data, try the other one")
+      );
 
       return;
     }
@@ -413,7 +462,9 @@ export default class LinkTool {
     this.data = { meta: metaData };
 
     if (!metaData) {
-      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
+      this.fetchingFailed(
+        this.api.i18n.t('Wrong response format from the server')
+      );
 
       return;
     }
