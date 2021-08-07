@@ -341,9 +341,6 @@ export default class LinkTool {
       this.nodes.linkText = this.make('span', this.CSS.linkText);
     }
 
-    // Mark as data is set
-    this.isDataSet = true;
-
     return holder;
   }
 
@@ -362,16 +359,13 @@ export default class LinkTool {
 
     if (title || this.config.allowMetaEdit) {
       this.nodes.linkTitle.innerHTML = title;
-      this.nodes.linkTitle.dataset.placeholder =
-        this.api.i18n.t('Enter link title');
+      this.nodes.linkTitle.dataset.placeholder = this.api.i18n.t('Enter link title');
       this.nodes.linkContent.appendChild(this.nodes.linkTitle);
     }
 
     if (description || this.config.allowMetaEdit) {
       this.nodes.linkDescription.innerHTML = description;
-      this.nodes.linkDescription.dataset.placeholder = this.api.i18n.t(
-        'Enter link description'
-      );
+      this.nodes.linkDescription.dataset.placeholder = this.api.i18n.t('Enter link description');
       this.nodes.linkContent.appendChild(this.nodes.linkDescription);
     }
 
@@ -391,6 +385,9 @@ export default class LinkTool {
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
+
+    // Mark as data is set
+    this.isDataSet = true;
   }
 
   /**
@@ -450,9 +447,7 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed(
-        this.api.i18n.t("Couldn't get this link data, try the other one")
-      );
+      this.fetchingFailed(this.api.i18n.t("Couldn't get this link data, try the other one"));
 
       return;
     }
@@ -462,9 +457,7 @@ export default class LinkTool {
     this.data = { meta: metaData };
 
     if (!metaData) {
-      this.fetchingFailed(
-        this.api.i18n.t('Wrong response format from the server')
-      );
+      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
 
       return;
     }
