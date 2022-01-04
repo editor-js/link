@@ -70,7 +70,7 @@ Link Tool supports these configuration parameters:
 | Field    | Type        | Description                                    |
 | ---------|-------------|------------------------------------------------|
 | endpoint | `string`    | **Required:** the endpoint for link data fetching. |
-| headaers | `object`    | **Optional:** the headers used in the GET request. |
+| headers | `object`    | **Optional:** the headers used in the GET request. |
 
 ## Output data
 
