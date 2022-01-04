@@ -54,7 +54,7 @@ const editor = EditorJS({
     linkTool: {
       class: LinkTool,
       config: {
-        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching
+        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching,
       }
     }
   },
@@ -70,6 +70,7 @@ Link Tool supports these configuration parameters:
 | Field    | Type        | Description                                    |
 | ---------|-------------|------------------------------------------------|
 | endpoint | `string`    | **Required:** the endpoint for link data fetching. |
+| headers | `object`    | **Optional:** the headers used in the GET request. |
 
 ## Output data
 
@@ -107,6 +108,7 @@ Backend response **should** cover following format:
 ```json5
 {
     "success" : 1,
+    "link": "https://codex.so", // Optionally return a link to set the hyperlink URL
     "meta": {
         // ... any fields you want
     }
@@ -114,6 +116,8 @@ Backend response **should** cover following format:
 ```
 
 **success** — uploading status. 1 for successful, 0 for failed
+
+**link** - You are able to return the l
 
 **meta** — link fetched data.
 
