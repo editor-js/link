@@ -117,7 +117,7 @@ Backend response **should** cover following format:
 
 **success** — uploading status. 1 for successful, 0 for failed
 
-**link** - You are able to return the l
+**link** - Optional response parameter to override the URL provided
 
 **meta** — link fetched data.
 
