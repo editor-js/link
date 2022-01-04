@@ -414,7 +414,10 @@ export default class LinkTool {
 
     const link = response.link || this.data.link;
 
-    this.data = { meta: metaData };
+    this.data = {
+      meta: metaData,
+      link,
+    };
 
     if (!metaData) {
       this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
