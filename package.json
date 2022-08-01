@@ -1,5 +1,5 @@
 {
-  "name": "@editorjs/link",
+  "name": "editorjs-link",
   "version": "2.4.1",
   "keywords": [
     "codex editor",
@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/editor-js/link.git"
+    "url": "git+https://github.com/Hyy-pe/editorjs-link.git"
   },
   "main": "./dist/bundle.js",
   "scripts": {
@@ -42,9 +42,9 @@
     "webpack-cli": "^3.3.11"
   },
   "bugs": {
-    "url": "https://github.com/editor-js/link/issues"
+    "url": "https://github.com/Hyy-pe/editorjs-link.git/issues"
   },
-  "homepage": "https://github.com/editor-js/link#readme",
+  "homepage": "https://github.com/Hyy-pe/editorjs-link.git#readme",
   "dependencies": {
     "@babel/runtime": "^7.10.2"
   }
