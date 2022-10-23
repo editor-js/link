@@ -54,7 +54,7 @@ const editor = EditorJS({
     linkTool: {
       class: LinkTool,
       config: {
-        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching
+        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching,
       }
     }
   },
@@ -70,6 +70,7 @@ Link Tool supports these configuration parameters:
 | Field         | Type      | Description                                                |
 | ------------- | --------- | ---------------------------------------------------------- |
 | endpoint      | `string`  | **Required:** the endpoint for link data fetching.         |
+| headers       | `object`  | **Optional:** the headers used in the GET request.         |
 | allowMetaEdit | `boolean` | **Optional:** Allow editing meta data after being fetched. |
 
 ## Output data
@@ -105,31 +106,34 @@ environment and stack.
 
 Backend response **should** cover following format:
 
-```json5
+```json
 {
   "success": 1,
+  "link": "https://codex.so", // Optionally return a link to set the hyperlink URL
   "meta": {
     // ... any fields you want
-  },
+  }
 }
 ```
 
 **success** — uploading status. 1 for successful, 0 for failed
 
+**link** - Optional response parameter to override the URL provided
+
 **meta** — link fetched data.
 
 Currently, the plugin's design supports the 'title', 'image', and 'description' fields. They should have the following format in the response:
 
-```json5
+```json
 {
   "success": 1,
   "meta": {
     "title": "CodeX Team",
     "description": "Club of web-development, design and marketing. We build team learning how to build full-valued projects on the world market.",
     "image": {
-      "url": "https://codex.so/public/app/img/meta_img.png",
-    },
-  },
+      "url": "https://codex.so/public/app/img/meta_img.png"
+    }
+  }
 }
 ```
 

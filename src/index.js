@@ -15,8 +15,8 @@
 
 // eslint-disable-next-line
 import css from "./index.css";
-import ToolboxIcon from './svg/toolbox.svg';
-import ajax from '@codexteam/ajax';
+import ToolboxIcon from "./svg/toolbox.svg";
+import ajax from "@codexteam/ajax";
 // eslint-disable-next-line
 import polyfill from "url-polyfill";
 
@@ -49,7 +49,7 @@ export default class LinkTool {
   static get toolbox() {
     return {
       icon: ToolboxIcon,
-      title: 'Link',
+      title: "Link",
     };
   }
 
@@ -78,8 +78,9 @@ export default class LinkTool {
      * Tool's initial config
      */
     this.config = {
-      endpoint: config.endpoint || '',
+      endpoint: config.endpoint || "",
       allowMetaEdit: config.allowMetaEdit || false,
+      headers: config.headers || {},
     };
 
     this.nodes = {
@@ -96,7 +97,7 @@ export default class LinkTool {
     };
 
     this._data = {
-      link: '',
+      link: "",
       meta: {},
     };
 
@@ -111,8 +112,8 @@ export default class LinkTool {
    * @returns {HTMLDivElement}
    */
   render() {
-    this.nodes.wrapper = this.make('div', this.CSS.baseClass);
-    this.nodes.container = this.make('div', this.CSS.container);
+    this.nodes.wrapper = this.make("div", this.CSS.baseClass);
+    this.nodes.container = this.make("div", this.CSS.container);
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
@@ -157,7 +158,7 @@ export default class LinkTool {
    * @returns {boolean} false if saved data is incorrect, otherwise true
    */
   validate() {
-    return this.data.link.trim() !== '';
+    return this.data.link.trim() !== "";
   }
 
   /**
@@ -195,19 +196,19 @@ export default class LinkTool {
       /**
        * Tool's classes
        */
-      container: 'link-tool',
-      inputEl: 'link-tool__input',
-      inputHolder: 'link-tool__input-holder',
-      inputError: 'link-tool__input-holder--error',
-      linkContent: 'link-tool__content',
-      linkContentRendered: 'link-tool__content--rendered',
-      linkImage: 'link-tool__image',
-      linkTitle: 'link-tool__title',
-      linkDescription: 'link-tool__description',
-      linkText: 'link-tool__anchor',
-      progress: 'link-tool__progress',
-      progressLoading: 'link-tool__progress--loading',
-      progressLoaded: 'link-tool__progress--loaded',
+      container: "link-tool",
+      inputEl: "link-tool__input",
+      inputHolder: "link-tool__input-holder",
+      inputError: "link-tool__input-holder--error",
+      linkContent: "link-tool__content",
+      linkContentRendered: "link-tool__content--rendered",
+      linkImage: "link-tool__image",
+      linkTitle: "link-tool__title",
+      linkDescription: "link-tool__description",
+      linkText: "link-tool__anchor",
+      progress: "link-tool__progress",
+      progressLoading: "link-tool__progress--loading",
+      progressLoaded: "link-tool__progress--loaded",
     };
   }
 
@@ -217,21 +218,21 @@ export default class LinkTool {
    * @returns {HTMLElement}
    */
   makeInputHolder() {
-    const inputHolder = this.make('div', this.CSS.inputHolder);
+    const inputHolder = this.make("div", this.CSS.inputHolder);
 
-    this.nodes.progress = this.make('label', this.CSS.progress);
-    this.nodes.input = this.make('div', [this.CSS.input, this.CSS.inputEl], {
+    this.nodes.progress = this.make("label", this.CSS.progress);
+    this.nodes.input = this.make("div", [this.CSS.input, this.CSS.inputEl], {
       contentEditable: !this.readOnly,
     });
 
-    this.nodes.input.dataset.placeholder = this.api.i18n.t('Link');
+    this.nodes.input.dataset.placeholder = this.api.i18n.t("Link");
 
     if (!this.readOnly) {
-      this.nodes.input.addEventListener('paste', (event) => {
+      this.nodes.input.addEventListener("paste", (event) => {
         this.startFetching(event);
       });
 
-      this.nodes.input.addEventListener('keydown', (event) => {
+      this.nodes.input.addEventListener("keydown", (event) => {
         const [ENTER, A] = [13, 65];
         const cmdPressed = event.ctrlKey || event.metaKey;
 
@@ -265,8 +266,8 @@ export default class LinkTool {
   startFetching(event) {
     let url = this.nodes.input.textContent;
 
-    if (event.type === 'paste') {
-      url = (event.clipboardData || window.clipboardData).getData('text');
+    if (event.type === "paste") {
+      url = (event.clipboardData || window.clipboardData).getData("text");
     }
 
     this.removeErrorStyle();
@@ -313,32 +314,32 @@ export default class LinkTool {
 
     // if edit meta is allowed add as dev
     if (this.config.allowMetaEdit) {
-      holder = this.make('div', this.CSS.linkContent);
+      holder = this.make("div", this.CSS.linkContent);
     } else {
       // add as link
-      holder = this.make('a', this.CSS.linkContent, {
-        target: '_blank',
-        rel: 'nofollow noindex noreferrer',
+      holder = this.make("a", this.CSS.linkContent, {
+        target: "_blank",
+        rel: "nofollow noindex noreferrer",
       });
     }
 
-    this.nodes.linkImage = this.make('div', this.CSS.linkImage);
-    this.nodes.linkTitle = this.make('div', this.CSS.linkTitle, {
+    this.nodes.linkImage = this.make("div", this.CSS.linkImage);
+    this.nodes.linkTitle = this.make("div", this.CSS.linkTitle, {
       contentEditable: this.config.allowMetaEdit,
     });
-    this.nodes.linkDescription = this.make('p', this.CSS.linkDescription, {
+    this.nodes.linkDescription = this.make("p", this.CSS.linkDescription, {
       contentEditable: this.config.allowMetaEdit,
     });
 
     // if edit meta is allowed add as link
     if (this.config.allowMetaEdit) {
-      this.nodes.linkText = this.make('a', this.CSS.linkText, {
-        target: '_blank',
-        rel: 'nofollow noindex noreferrer',
+      this.nodes.linkText = this.make("a", this.CSS.linkText, {
+        target: "_blank",
+        rel: "nofollow noindex noreferrer",
       });
     } else {
       // add as span
-      this.nodes.linkText = this.make('span', this.CSS.linkText);
+      this.nodes.linkText = this.make("span", this.CSS.linkText);
     }
 
     return holder;
@@ -353,32 +354,32 @@ export default class LinkTool {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
     if (image && image.url) {
-      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+      this.nodes.linkImage.style.backgroundImage = "url(" + image.url + ")";
       this.nodes.linkContent.appendChild(this.nodes.linkImage);
     }
 
     if (title || this.config.allowMetaEdit) {
       this.nodes.linkTitle.innerHTML = title;
-      this.nodes.linkTitle.dataset.placeholder = this.api.i18n.t('Enter link title');
+      this.nodes.linkTitle.dataset.placeholder = this.api.i18n.t("Enter link title");
       this.nodes.linkContent.appendChild(this.nodes.linkTitle);
     }
 
     if (description || this.config.allowMetaEdit) {
       this.nodes.linkDescription.innerHTML = description;
-      this.nodes.linkDescription.dataset.placeholder = this.api.i18n.t('Enter link description');
+      this.nodes.linkDescription.dataset.placeholder = this.api.i18n.t("Enter link description");
       this.nodes.linkContent.appendChild(this.nodes.linkDescription);
     }
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     // if edit meta is not allowed add href to link content holder
     if (!this.allowMetaEdit) {
-      this.nodes.linkContent.setAttribute('href', this.data.link);
+      this.nodes.linkContent.setAttribute("href", this.data.link);
     }
     this.nodes.linkContent.appendChild(this.nodes.linkText);
 
     // if edit meta is allowed add href to link text
     if (this.config.allowMetaEdit) {
-      this.nodes.linkText.setAttribute('href', this.data.link);
+      this.nodes.linkText.setAttribute("href", this.data.link);
     }
     try {
       this.nodes.linkText.textContent = new URL(this.data.link).hostname;
@@ -429,6 +430,7 @@ export default class LinkTool {
     try {
       const { body } = await ajax.get({
         url: this.config.endpoint,
+        headers: this.config.headers,
         data: {
           url,
         },
@@ -454,10 +456,15 @@ export default class LinkTool {
 
     const metaData = response.meta;
 
-    this.data = { meta: metaData };
+    const link = response.link || this.data.link;
+
+    this.data = {
+      meta: metaData,
+      link,
+    };
 
     if (!metaData) {
-      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
+      this.fetchingFailed(this.api.i18n.t("Wrong response format from the server"));
 
       return;
     }
@@ -478,7 +485,7 @@ export default class LinkTool {
   fetchingFailed(errorMessage) {
     this.api.notifier.show({
       message: errorMessage,
-      style: 'error',
+      style: "error",
     });
 
     this.applyErrorStyle();
