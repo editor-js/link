@@ -1,13 +1,13 @@
 {
+  "root": true,
   "extends": [
     "codex"
   ],
-  "settings": {
-    "jsdoc": {
-      "mode": "javascript"
-    }
-  },
   "globals": {
-    "Range" : true
+    "Range" : true,
+    "HTMLDivElement": true,
+    "HTMLElement": true,
+    "KeyboardEvent": true,
+    "PasteEvent": true
   }
 }
