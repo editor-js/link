@@ -116,6 +116,7 @@ export default class LinkTool {
    */
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
+    this.nodes.wrapper.draggable = !this.readOnly;
     this.nodes.container = this.make('div', this.CSS.container);
 
     this.nodes.inputHolder = this.makeInputHolder();
@@ -308,6 +309,7 @@ export default class LinkTool {
     const holder = this.make('a', this.CSS.linkContent, {
       target: '_blank',
       rel: 'nofollow noindex noreferrer',
+      draggable: false,
     });
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
