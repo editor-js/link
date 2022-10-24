@@ -1,6 +1,6 @@
 {
   "name": "@editorjs/link",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "keywords": [
     "codex editor",
     "tool",
@@ -17,7 +17,9 @@
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch"
+    "build:dev": "webpack --mode development --watch",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
   },
   "author": "CodeX <team@codex.so>",
   "devDependencies": {

@@ -13,12 +13,16 @@
  * @property {string} description - link's description
  */
 
-// eslint-disable-next-line
-import css from './index.css';
+/**
+ * @typedef {object} LinkToolConfig
+ * @property {string} endpoint - the endpoint for link data fetching
+ * @property {object} headers - the headers used in the GET request
+ */
+
+import './index.css';
+import 'url-polyfill';
 import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
-// eslint-disable-next-line
-import polyfill from 'url-polyfill';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -64,10 +68,11 @@ export default class LinkTool {
   }
 
   /**
-   * @param {LinkToolData} data - previously saved data
-   * @param {config} config - user config for Tool
-   * @param {object} api - Editor.js API
-   * @param {boolean} readOnly - read-only mode flag
+   * @param {object} options - Tool constructor options fot from Editor.js
+   * @param {LinkToolData} options.data - previously saved data
+   * @param {LinkToolConfig} options.config - user config for Tool
+   * @param {object} options.api - Editor.js API
+   * @param {boolean} options.readOnly - read-only mode flag
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
@@ -157,7 +162,7 @@ export default class LinkTool {
   /**
    * Stores all Tool's data
    *
-   * @param {LinkToolData} data
+   * @param {LinkToolData} data - data to store
    */
   set data(data) {
     this._data = Object.assign({}, {
@@ -251,7 +256,7 @@ export default class LinkTool {
   /**
    * Activates link data fetching by url
    *
-   * @param {PasteEvent} event
+   * @param {PasteEvent|KeyboardEvent} event - fetching could be fired by a pase or keydown events
    */
   startFetching(event) {
     let url = this.nodes.input.textContent;
@@ -275,7 +280,7 @@ export default class LinkTool {
   /**
    * Select LinkTool input content by CMD+A
    *
-   * @param {KeyboardEvent} event
+   * @param {KeyboardEvent} event - keydown
    */
   selectLinkUrl(event) {
     event.preventDefault();
@@ -348,14 +353,16 @@ export default class LinkTool {
   }
 
   /**
-   * Show loading progressbar
+   * Show loading progress bar
    */
   showProgress() {
     this.nodes.progress.classList.add(this.CSS.progressLoading);
   }
 
   /**
-   * Hide loading progressbar
+   * Hide loading progress bar
+   *
+   * @returns {Promise<void>}
    */
   hideProgress() {
     return new Promise((resolve) => {
@@ -401,7 +408,7 @@ export default class LinkTool {
   /**
    * Link data fetching callback
    *
-   * @param {UploadResponseFormat} response
+   * @param {UploadResponseFormat} response - backend response
    */
   onFetch(response) {
     if (!response || !response.success) {
@@ -436,7 +443,7 @@ export default class LinkTool {
    *
    * @private
    *
-   * @param {string} errorMessage
+   * @param {string} errorMessage - message to explain user what he should do
    */
   fetchingFailed(errorMessage) {
     this.api.notifier.show({
@@ -450,9 +457,9 @@ export default class LinkTool {
   /**
    * Helper method for elements creation
    *
-   * @param tagName
-   * @param classNames
-   * @param attributes
+   * @param {string} tagName - name of creating element
+   * @param {string|string[]} [classNames] - list of CSS classes to add
+   * @param {object} [attributes] - object with attributes to add
    * @returns {HTMLElement}
    */
   make(tagName, classNames = null, attributes = {}) {
