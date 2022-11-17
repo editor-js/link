@@ -21,8 +21,8 @@
 
 import './index.css';
 import 'url-polyfill';
-import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
+import { IconLink } from '@codexteam/icons';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -52,7 +52,7 @@ export default class LinkTool {
    */
   static get toolbox() {
     return {
-      icon: ToolboxIcon,
+      icon: IconLink,
       title: 'Link',
     };
   }
