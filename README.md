@@ -55,6 +55,8 @@ const editor = EditorJS({
       class: LinkTool,
       config: {
         endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching,
+        createOnPaste: true, // true to catch non-image pasted links and create a preview automatically
+        key: 'linkTool', // Required if createOnPaste is true - must match the tool key
       }
     }
   },
@@ -71,6 +73,8 @@ Link Tool supports these configuration parameters:
 | ---------|-------------|------------------------------------------------|
 | endpoint | `string`    | **Required:** the endpoint for link data fetching. |
 | headers | `object`    | **Optional:** the headers used in the GET request. |
+| createOnPaste | `boolean`    | **Optional:** true to catch non-image pasted links and create a preview automatically. |
+| key | `string`    | **Optional:** Required if createOnPaste is true - must match the tool key. |
 
 ## Output data
 
