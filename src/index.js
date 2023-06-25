@@ -289,6 +289,7 @@ export default class LinkTool {
    * Activates link data fetching by url
    *
    * @param {PasteEvent|KeyboardEvent} event - fetching could be fired by a pase or keydown events
+   * @param {boolean} fallbackToText if true and the fetch fails, falls back to rendering a paragraph block with the raw link instead of a link block with a failure.
    */
   startFetching(event, fallbackToText) {
     let url = this.nodes.input.textContent;
@@ -417,6 +418,7 @@ export default class LinkTool {
    * Sends to backend pasted url and receives link data
    *
    * @param {string} url - link source url
+   * @param {boolean} fallbackToText if true and the fetch fails, falls back to rendering a paragraph block with the raw link instead of a link block with a failure.
    */
   async fetchLinkData(url, fallbackToText) {
     this.showProgress();
@@ -440,12 +442,13 @@ export default class LinkTool {
       }
     }
   }
-  
+
   /**
    * Replace this link block with a standard paragraph (text) block. Example: as a fallback for pasted URLs which fetch failed.
    */
   replaceBlockWithParagraph() {
-    const newBlock = this.api.blocks.insert('paragraph', {text: this.nodes.input.textContent}, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
+    const newBlock = this.api.blocks.insert('paragraph', { text: this.nodes.input.textContent }, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
+
     this.api.caret.setToBlock(newBlock.id);
   }
 
@@ -525,7 +528,7 @@ export default class LinkTool {
   /**
    * Custom paste handler, so that we can choose more accurately whether it should catch the paste or not.
    *
-   * @param {PasteEvent | KeyboardEvent} event 
+   * @param {PasteEvent | KeyboardEvent} event the paste event
    */
   handlePaste(event) {
     const pasteConfig = {
@@ -534,13 +537,16 @@ export default class LinkTool {
       },
     };
     const patterns = pasteConfig.patterns;
-    const url = (event.clipboardData || window.clipboardData)?.getData('text');
-    if (!url) return;
+    const url = (event.clipboardData || window.clipboardData).getData('text');
+
+    if (!url) {
+      return;
+    }
 
     const currentBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
     const isParagraph = currentBlock.name === 'paragraph';
     const isCurrentBlockEmpty = currentBlock.isEmpty;
-    
+
     if (patterns.embed.test(url) && isParagraph && isCurrentBlockEmpty) {
       event.preventDefault(); // Prevent the default paste behavior
       this.insertPastedBlock(url);
@@ -549,22 +555,26 @@ export default class LinkTool {
 
   /**
    * Insert a link block
-   * @param {string} content 
+   *
+   * @param {string} link the URL to include in the created link block
    */
-  insertPastedBlock(content) {
+  insertPastedBlock(link) {
     const pluginName = this.getPluginName();
-    const newBlock = this.api.blocks.insert(pluginName, {link: content}, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
+
+    this.api.blocks.insert(pluginName, { link }, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
   }
 
   /**
    * Get the name of the plugin dynamically from the Editor.js configuration.
    * Ideally, we should get it dynamically without requiring the user to provide a config, but I haven't found how to do that.
+   *
    * @returns {string} The name of the plugin
    */
   getPluginName() {
     if (!this.config.key) {
       throw new Error(`You need to provide the tool key in the plugin config, e.g. { linkTool: { class: LinkTool, config: { key: 'linkTool' } } }`);
     }
+
     return this.config.key;
   }
 
