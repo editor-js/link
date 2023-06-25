@@ -562,6 +562,9 @@ export default class LinkTool {
     const pluginName = this.getPluginName();
 
     this.api.blocks.insert(pluginName, { link }, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
+    setTimeout(() => {
+      this.api.toolbar.toggleBlockSettings(true);
+    });
   }
 
   /**
