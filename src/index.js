@@ -450,6 +450,7 @@ export default class LinkTool {
     const newBlock = this.api.blocks.insert('paragraph', { text: this.nodes.input.textContent }, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
 
     this.api.caret.setToBlock(newBlock.id);
+    this.api.toolbar.toggleBlockSettings(false);
   }
 
   /**
@@ -609,7 +610,6 @@ export default class LinkTool {
 
         if (tune.name === 'urlOnly') {
           this.replaceBlockWithParagraph();
-          this.api.toolbar.toggleBlockSettings(false);
         }
       },
     }));
