@@ -609,6 +609,7 @@ export default class LinkTool {
 
         if (tune.name === 'urlOnly') {
           this.replaceBlockWithParagraph();
+          this.api.toolbar.toggleBlockSettings(false);
         }
       },
     }));
