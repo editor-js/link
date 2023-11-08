@@ -2,7 +2,7 @@
 assets/
 dev/
 src/
-.babelrc
 .eslintrc
-webpack.config.js
+vite.config.js
+postcss.config.js
 yarn.lock
