@@ -14,8 +14,6 @@ Allows adding link previews to your articles.
 
 ## Installation
 
-### Install via NPM
-
 Get the package
 
 ```shell
