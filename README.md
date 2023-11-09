@@ -14,32 +14,19 @@ Allows adding link previews to your articles.
 
 ## Installation
 
-### Install via NPM
-
 Get the package
 
 ```shell
-npm i --save-dev @editorjs/link
+yarn add @editorjs/link
 ```
 
 Include module at your application
 
 ```javascript
-const LinkTool = require('@editorjs/link');
+import LinkTool from '@editorjs/link';
 ```
 
-### Download to your project's source dir
-
-1. Download folder `dist` from repository
-2. Add `dist/bundle.js` file to your page.
-
-### Load from CDN
-
-You can load the specific version of a package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/link).
-
-`https://cdn.jsdelivr.net/npm/@editorjs/link@2.0.0`
-
-Then require this script on page with Editor.js through the `<script src=""></script>` tag.
+Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/link@latest)
 
 ## Usage
 
