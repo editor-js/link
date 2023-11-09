@@ -26,13 +26,7 @@ Include module at your application
 import LinkTool from '@editorjs/link';
 ```
 
-### Load from CDN
-
-You can load the specific version of a package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/link).
-
-`https://cdn.jsdelivr.net/npm/@editorjs/link@2.0.0`
-
-Then require this script on page with Editor.js through the `<script src=""></script>` tag.
+Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/link@latest)
 
 ## Usage
 
