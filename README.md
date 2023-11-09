@@ -19,19 +19,14 @@ Allows adding link previews to your articles.
 Get the package
 
 ```shell
-npm i --save-dev @editorjs/link
+yarn add @editorjs/link
 ```
 
 Include module at your application
 
 ```javascript
-const LinkTool = require('@editorjs/link');
+import LinkTool from '@editorjs/link';
 ```
-
-### Download to your project's source dir
-
-1. Download folder `dist` from repository
-2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
 
