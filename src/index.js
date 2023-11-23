@@ -84,6 +84,7 @@ export default class LinkTool {
     this.config = {
       endpoint: config.endpoint || '',
       headers: config.headers || {},
+      doFetch: config.doFetch || null,
     };
 
     this.nodes = {
@@ -391,13 +392,21 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const { body } = await (ajax.get({
-        url: this.config.endpoint,
-        headers: this.config.headers,
-        data: {
-          url,
-        },
-      }));
+      const { body } = this.config.doFetch
+        ? await this.config.doFetch(
+          {
+            url,
+            endpoint: this.config.endpoint,
+            headers: this.config.headers,
+          }
+        )
+        : await (ajax.get({
+          url: this.config.endpoint,
+          headers: this.config.headers,
+          data: {
+            url,
+          },
+        }));
 
       this.onFetch(body);
     } catch (error) {

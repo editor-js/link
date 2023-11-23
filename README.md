@@ -58,6 +58,7 @@ Link Tool supports these configuration parameters:
 | ---------|-------------|------------------------------------------------|
 | endpoint | `string`    | **Required:** the endpoint for link data fetching. |
 | headers | `object`    | **Optional:** the headers used in the GET request. |
+| doFetch | `callback`  | **Optional:** the callback for custom fetch implementation `({url, endpoin, heaers}) => {}` |
 
 ## Output data
 
