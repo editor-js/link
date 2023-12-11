@@ -25,8 +25,10 @@ import './index.css';
 import 'url-polyfill';
 import ajax from '@codexteam/ajax';
 import { IconLink } from '@codexteam/icons';
+import { isVideoLink } from './videoLink';
 
-const noPreviewIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="currentColor"><path d="M480-285q-80 0-143-43t-92-112q19-46 54.5-80.5T382-575l39 39q-38 11-69.5 36T300-440q27 49 75 77t105 28q30 0 58.5-8t52.5-23l35 35q-31 22-68 34t-78 12Zm191-86-35-35q7-8 13-16.5t11-17.5q-25-45-67.5-72T498-544l-49-49q85-11 159 31.5T715-440q-8 20-19 37t-25 32ZM815-56l-64-64H180q-25 0-42.5-17.5T120-180v-571l-54-54 43-43L858-99l-43 43ZM180-180h511L180-692v512Zm660-22-60-60v-421H359L202-840h578q25 0 42.5 17.5T840-780v578Z"/></svg>';
+const noPreviewIcon =
+  '<svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="currentColor"><path d="M480-285q-80 0-143-43t-92-112q19-46 54.5-80.5T382-575l39 39q-38 11-69.5 36T300-440q27 49 75 77t105 28q30 0 58.5-8t52.5-23l35 35q-31 22-68 34t-78 12Zm191-86-35-35q7-8 13-16.5t11-17.5q-25-45-67.5-72T498-544l-49-49q85-11 159 31.5T715-440q-8 20-19 37t-25 32ZM815-56l-64-64H180q-25 0-42.5-17.5T120-180v-571l-54-54 43-43L858-99l-43 43ZM180-180h511L180-692v512Zm660-22-60-60v-421H359L202-840h578q25 0 42.5 17.5T840-780v578Z"/></svg>';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -127,7 +129,11 @@ export default class LinkTool {
     this.data = data;
 
     if (config.createOnPaste) {
-      this.api.listeners.on(this.api.ui.nodes.wrapper, 'paste', this.handlePaste.bind(this));
+      this.api.listeners.on(
+        this.api.ui.nodes.wrapper,
+        'paste',
+        this.handlePaste.bind(this)
+      );
 
       // If a block was programmatically created with a link, start fetching
       setTimeout(() => {
@@ -197,10 +203,13 @@ export default class LinkTool {
    * @param {LinkToolData} data - data to store
    */
   set data(data) {
-    this._data = Object.assign({}, {
-      link: data.link || this._data.link,
-      meta: data.meta || this._data.meta,
-    });
+    this._data = Object.assign(
+      {},
+      {
+        link: data.link || this._data.link,
+        meta: data.meta || this._data.meta,
+      }
+    );
   }
 
   /**
@@ -379,7 +388,7 @@ export default class LinkTool {
     this.nodes.linkContent.appendChild(this.nodes.linkText);
 
     try {
-      this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
+      this.nodes.linkText.textContent = new URL(this.data.link).hostname;
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
@@ -425,20 +434,20 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const { body } = await (ajax.get({
+      const { body } = await ajax.get({
         url: this.config.endpoint,
         headers: this.config.headers,
         data: {
           url,
         },
-      }));
+      });
 
       this.onFetch(body);
     } catch (error) {
       if (fallbackToText) {
         this.replaceBlockWithParagraph();
       } else {
-        this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
+        this.fetchingFailed(this.api.i18n.t("Couldn't fetch the link data"));
       }
     }
   }
@@ -447,7 +456,14 @@ export default class LinkTool {
    * Replace this link block with a standard paragraph (text) block. Example: as a fallback for pasted URLs which fetch failed.
    */
   replaceBlockWithParagraph() {
-    const newBlock = this.api.blocks.insert('paragraph', { text: this.nodes.input.textContent }, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
+    const newBlock = this.api.blocks.insert(
+      'paragraph',
+      { text: this.nodes.input.textContent },
+      undefined,
+      this.api.blocks.getCurrentBlockIndex(),
+      true,
+      true
+    );
 
     this.api.caret.setToBlock(newBlock.id);
     this.api.toolbar.toggleBlockSettings(false);
@@ -460,7 +476,9 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
+      this.fetchingFailed(
+        this.api.i18n.t("Couldn't get this link data, try the other one")
+      );
 
       return;
     }
@@ -475,7 +493,9 @@ export default class LinkTool {
     };
 
     if (!metaData) {
-      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
+      this.fetchingFailed(
+        this.api.i18n.t('Wrong response format from the server')
+      );
 
       return;
     }
@@ -544,11 +564,15 @@ export default class LinkTool {
       return;
     }
 
-    const currentBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
+    const currentBlock = this.api.blocks.getBlockByIndex(
+      this.api.blocks.getCurrentBlockIndex()
+    );
     const isParagraph = currentBlock.name === 'paragraph';
     const isCurrentBlockEmpty = currentBlock.isEmpty;
+    const shouldDisplayEmbedLink =
+      patterns.embed.test(url) && !isVideoLink(url);
 
-    if (patterns.embed.test(url) && isParagraph && isCurrentBlockEmpty) {
+    if (shouldDisplayEmbedLink && isParagraph && isCurrentBlockEmpty) {
       event.preventDefault(); // Prevent the default paste behavior
       this.insertPastedBlock(url);
     }
@@ -562,7 +586,14 @@ export default class LinkTool {
   insertPastedBlock(link) {
     const pluginName = this.getPluginName();
 
-    this.api.blocks.insert(pluginName, { link }, undefined, this.api.blocks.getCurrentBlockIndex(), true, true);
+    this.api.blocks.insert(
+      pluginName,
+      { link },
+      undefined,
+      this.api.blocks.getCurrentBlockIndex(),
+      true,
+      true
+    );
     setTimeout(() => {
       this.api.toolbar.toggleBlockSettings(true);
     });
@@ -576,7 +607,9 @@ export default class LinkTool {
    */
   getPluginName() {
     if (!this.config.key) {
-      throw new Error(`You need to provide the tool key in the plugin config, e.g. { linkTool: { class: LinkTool, config: { key: 'linkTool' } } }`);
+      throw new Error(
+        `You need to provide the tool key in the plugin config, e.g. { linkTool: { class: LinkTool, config: { key: 'linkTool' } } }`
+      );
     }
 
     return this.config.key;
@@ -592,9 +625,12 @@ export default class LinkTool {
   renderSettings() {
     // Merge default tunes with the ones that might be added by user
     // @see https://github.com/editor-js/image/pull/49
-    const tunes = this.config.actions && this.config.createOnPaste ? LinkTool.tunes.concat(this.config.actions) : LinkTool.tunes;
+    const tunes =
+      this.config.actions && this.config.createOnPaste
+        ? LinkTool.tunes.concat(this.config.actions)
+        : LinkTool.tunes;
 
-    return tunes.map(tune => ({
+    return tunes.map((tune) => ({
       icon: tune.icon,
       label: this.api.i18n.t(tune.title),
       name: tune.name,
