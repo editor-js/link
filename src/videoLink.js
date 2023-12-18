@@ -4,6 +4,7 @@ const videoLinkRegex = {
   vimeo:
     /(?:http[s]?:\/\/)?(?:www.)?(?:player.)?vimeo\.co(?:.+\/([^\/]\d+)(?:#t=[\d]+)?s?$)/,
   youtube: /(?:https?:\/\/)?(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com)\/(?:v\/|u\/\w\/|embed\/|watch))(?:(?:\?v=)?([^#&?=]*))?((?:[?&]\w*=\w*)*)/,
+  dailymotion: /(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/video\/([^_]+)/,
   coub: /https?:\/\/coub\.com\/view\/([^\/\?\&]+)/,
   vine: /https?:\/\/vine\.co\/v\/([^\/\?\&]+)/,
   imgur: /https?:\/\/(?:i\.)?imgur\.com.*\/([a-zA-Z0-9]+)(?:\.gifv)?/,
