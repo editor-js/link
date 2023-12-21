@@ -166,8 +166,7 @@ export default class LinkTool {
      */
     if (Object.keys(this.data.meta).length) {
       this.nodes.container.appendChild(this.nodes.linkContent);
-      this.showLinkPreviewOverridden(this.data.meta);
-      // this.showLinkPreview(this.data.meta);
+      this.showLinkPreview(this.data.meta);
     } else {
       this.nodes.container.appendChild(this.nodes.inputHolder);
     }
@@ -380,40 +379,6 @@ export default class LinkTool {
 
     if (title) {
       this.nodes.linkTitle.textContent = title;
-      this.nodes.linkContent.appendChild(this.nodes.linkTitle);
-    }
-
-    if (description) {
-      this.nodes.linkDescription.textContent = description;
-      this.nodes.linkContent.appendChild(this.nodes.linkDescription);
-    }
-
-    this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
-    this.nodes.linkContent.setAttribute('href', this.data.link);
-    this.nodes.linkContent.appendChild(this.nodes.linkText);
-
-    try {
-      this.nodes.linkText.textContent = new URL(this.data.link).hostname;
-    } catch (e) {
-      this.nodes.linkText.textContent = this.data.link;
-    }
-  }
-
-  /**
-   * Compose link preview from fetched data
-   *
-   * @param {metaData} meta - link meta data
-   */
-  showLinkPreviewOverridden({ image, title, description }) {
-    this.nodes.container.appendChild(this.nodes.linkContent);
-
-    if (image && image.url) {
-      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
-      this.nodes.linkContent.appendChild(this.nodes.linkImage);
-    }
-
-    if (title) {
-      this.nodes.linkTitle.textContent = title;
       this.nodes.linkInfos.appendChild(this.nodes.linkTitle);
     }
 
@@ -538,8 +503,7 @@ export default class LinkTool {
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
-      this.showLinkPreviewOverridden(metaData);
-      // this.showLinkPreview(metaData);
+      this.showLinkPreview(metaData);
     });
   }
 
