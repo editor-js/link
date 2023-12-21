@@ -116,6 +116,7 @@ export default class LinkTool {
       inputHolder: null,
       linkContent: null,
       linkImage: null,
+      linkInfos: null,
       linkTitle: null,
       linkDescription: null,
       linkText: null,
@@ -155,6 +156,7 @@ export default class LinkTool {
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
+    this.nodes.container = this.make('div', [this.CSS.container, 'not-prose']);
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
@@ -164,7 +166,8 @@ export default class LinkTool {
      */
     if (Object.keys(this.data.meta).length) {
       this.nodes.container.appendChild(this.nodes.linkContent);
-      this.showLinkPreview(this.data.meta);
+      this.showLinkPreviewOverridden(this.data.meta);
+      // this.showLinkPreview(this.data.meta);
     } else {
       this.nodes.container.appendChild(this.nodes.inputHolder);
     }
@@ -239,6 +242,7 @@ export default class LinkTool {
       linkContent: 'link-tool__content',
       linkContentRendered: 'link-tool__content--rendered',
       linkImage: 'link-tool__image',
+      linkInfos: 'link-tool__infos',
       linkTitle: 'link-tool__title',
       linkDescription: 'link-tool__description',
       linkText: 'link-tool__anchor',
@@ -353,6 +357,7 @@ export default class LinkTool {
     });
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
+    this.nodes.linkInfos = this.make('div', this.CSS.linkInfos);
     this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
     this.nodes.linkText = this.make('span', this.CSS.linkText);
@@ -392,6 +397,37 @@ export default class LinkTool {
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
+  }
+
+  /**
+   * Compose link preview from fetched data
+   *
+   * @param {metaData} meta - link meta data
+   */
+  showLinkPreviewOverridden({ image, title, description }) {
+    this.nodes.container.appendChild(this.nodes.linkContent);
+
+    if (image && image.url) {
+      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+      this.nodes.linkContent.appendChild(this.nodes.linkImage);
+    }
+
+    if (title) {
+      this.nodes.linkTitle.textContent = title;
+      this.nodes.linkInfos.appendChild(this.nodes.linkTitle);
+    }
+
+    if (description) {
+      this.nodes.linkDescription.textContent = description;
+      this.nodes.linkInfos.appendChild(this.nodes.linkDescription);
+    }
+
+    this.nodes.linkText.textContent = this.data.link;
+    this.nodes.linkInfos.appendChild(this.nodes.linkText);
+
+    this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
+    this.nodes.linkContent.setAttribute('href', this.data.link);
+    this.nodes.linkContent.appendChild(this.nodes.linkInfos);
   }
 
   /**
@@ -502,7 +538,8 @@ export default class LinkTool {
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
-      this.showLinkPreview(metaData);
+      this.showLinkPreviewOverridden(metaData);
+      // this.showLinkPreview(metaData);
     });
   }
 
