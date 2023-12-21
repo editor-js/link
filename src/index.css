@@ -143,6 +143,7 @@
 
   &__description {
     font-size: 13px;
+    color: #595959;
     line-height: 1.25;
     height:2rem;
     overflow: hidden;
