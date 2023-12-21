@@ -17,12 +17,18 @@
  * @typedef {object} LinkToolConfig
  * @property {string} endpoint - the endpoint for link data fetching
  * @property {object} headers - the headers used in the GET request
+ * @property {boolean} createOnPaste - true to catch non-image pasted links and create a preview automatically
+ * @property {string} key - Required if createOnPaste is true - must match the tool key, i.e. the key used in the editorjs config
  */
 
 import './index.css';
 import 'url-polyfill';
 import ajax from '@codexteam/ajax';
 import { IconLink } from '@codexteam/icons';
+import { isVideoLink } from './videoLink';
+
+const noPreviewIcon =
+  '<svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="currentColor"><path d="M480-285q-80 0-143-43t-92-112q19-46 54.5-80.5T382-575l39 39q-38 11-69.5 36T300-440q27 49 75 77t105 28q30 0 58.5-8t52.5-23l35 35q-31 22-68 34t-78 12Zm191-86-35-35q7-8 13-16.5t11-17.5q-25-45-67.5-72T498-544l-49-49q85-11 159 31.5T715-440q-8 20-19 37t-25 32ZM815-56l-64-64H180q-25 0-42.5-17.5T120-180v-571l-54-54 43-43L858-99l-43 43ZM180-180h511L180-692v512Zm660-22-60-60v-421H359L202-840h578q25 0 42.5 17.5T840-780v578Z"/></svg>';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -68,10 +74,25 @@ export default class LinkTool {
   }
 
   /**
+   * Available image tools
+   *
+   * @returns {Array}
+   */
+  static get tunes() {
+    return [
+      {
+        name: 'urlOnly',
+        icon: noPreviewIcon,
+        title: 'Remove preview',
+      },
+    ];
+  }
+
+  /**
    * @param {object} options - Tool constructor options fot from Editor.js
    * @param {LinkToolData} options.data - previously saved data
    * @param {LinkToolConfig} options.config - user config for Tool
-   * @param {object} options.api - Editor.js API
+   * @param {import('@editorjs/editorjs').API} options.api - Editor.js API
    * @param {boolean} options.readOnly - read-only mode flag
    */
   constructor({ data, config, api, readOnly }) {
@@ -82,6 +103,7 @@ export default class LinkTool {
      * Tool's initial config
      */
     this.config = {
+      ...config,
       endpoint: config.endpoint || '',
       headers: config.headers || {},
     };
@@ -94,6 +116,7 @@ export default class LinkTool {
       inputHolder: null,
       linkContent: null,
       linkImage: null,
+      linkInfos: null,
       linkTitle: null,
       linkDescription: null,
       linkText: null,
@@ -105,6 +128,22 @@ export default class LinkTool {
     };
 
     this.data = data;
+
+    if (config.createOnPaste) {
+      this.api.listeners.on(
+        this.api.ui.nodes.wrapper,
+        'paste',
+        this.handlePaste.bind(this)
+      );
+
+      // If a block was programmatically created with a link, start fetching
+      setTimeout(() => {
+        if (data.link) {
+          this.nodes.input.textContent = data.link;
+          this.startFetching({}, true);
+        }
+      });
+    }
   }
 
   /**
@@ -117,6 +156,7 @@ export default class LinkTool {
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
+    this.nodes.container = this.make('div', [this.CSS.container, 'not-prose']);
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
@@ -165,10 +205,13 @@ export default class LinkTool {
    * @param {LinkToolData} data - data to store
    */
   set data(data) {
-    this._data = Object.assign({}, {
-      link: data.link || this._data.link,
-      meta: data.meta || this._data.meta,
-    });
+    this._data = Object.assign(
+      {},
+      {
+        link: data.link || this._data.link,
+        meta: data.meta || this._data.meta,
+      }
+    );
   }
 
   /**
@@ -198,6 +241,7 @@ export default class LinkTool {
       linkContent: 'link-tool__content',
       linkContentRendered: 'link-tool__content--rendered',
       linkImage: 'link-tool__image',
+      linkInfos: 'link-tool__infos',
       linkTitle: 'link-tool__title',
       linkDescription: 'link-tool__description',
       linkText: 'link-tool__anchor',
@@ -257,8 +301,9 @@ export default class LinkTool {
    * Activates link data fetching by url
    *
    * @param {PasteEvent|KeyboardEvent} event - fetching could be fired by a pase or keydown events
+   * @param {boolean} fallbackToText if true and the fetch fails, falls back to rendering a paragraph block with the raw link instead of a link block with a failure.
    */
-  startFetching(event) {
+  startFetching(event, fallbackToText) {
     let url = this.nodes.input.textContent;
 
     if (event.type === 'paste') {
@@ -266,7 +311,7 @@ export default class LinkTool {
     }
 
     this.removeErrorStyle();
-    this.fetchLinkData(url);
+    this.fetchLinkData(url, fallbackToText);
   }
 
   /**
@@ -311,6 +356,7 @@ export default class LinkTool {
     });
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
+    this.nodes.linkInfos = this.make('div', this.CSS.linkInfos);
     this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
     this.nodes.linkText = this.make('span', this.CSS.linkText);
@@ -333,23 +379,20 @@ export default class LinkTool {
 
     if (title) {
       this.nodes.linkTitle.textContent = title;
-      this.nodes.linkContent.appendChild(this.nodes.linkTitle);
+      this.nodes.linkInfos.appendChild(this.nodes.linkTitle);
     }
 
     if (description) {
       this.nodes.linkDescription.textContent = description;
-      this.nodes.linkContent.appendChild(this.nodes.linkDescription);
+      this.nodes.linkInfos.appendChild(this.nodes.linkDescription);
     }
+
+    this.nodes.linkText.textContent = this.data.link;
+    this.nodes.linkInfos.appendChild(this.nodes.linkText);
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     this.nodes.linkContent.setAttribute('href', this.data.link);
-    this.nodes.linkContent.appendChild(this.nodes.linkText);
-
-    try {
-      this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
-    } catch (e) {
-      this.nodes.linkText.textContent = this.data.link;
-    }
+    this.nodes.linkContent.appendChild(this.nodes.linkInfos);
   }
 
   /**
@@ -385,24 +428,46 @@ export default class LinkTool {
    * Sends to backend pasted url and receives link data
    *
    * @param {string} url - link source url
+   * @param {boolean} fallbackToText if true and the fetch fails, falls back to rendering a paragraph block with the raw link instead of a link block with a failure.
    */
-  async fetchLinkData(url) {
+  async fetchLinkData(url, fallbackToText) {
     this.showProgress();
     this.data = { link: url };
 
     try {
-      const { body } = await (ajax.get({
+      const { body } = await ajax.get({
         url: this.config.endpoint,
         headers: this.config.headers,
         data: {
           url,
         },
-      }));
+      });
 
       this.onFetch(body);
     } catch (error) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
+      if (fallbackToText) {
+        this.replaceBlockWithParagraph();
+      } else {
+        this.fetchingFailed(this.api.i18n.t("Couldn't fetch the link data"));
+      }
     }
+  }
+
+  /**
+   * Replace this link block with a standard paragraph (text) block. Example: as a fallback for pasted URLs which fetch failed.
+   */
+  replaceBlockWithParagraph() {
+    const newBlock = this.api.blocks.insert(
+      'paragraph',
+      { text: this.nodes.input.textContent },
+      undefined,
+      this.api.blocks.getCurrentBlockIndex(),
+      true,
+      true
+    );
+
+    this.api.caret.setToBlock(newBlock.id);
+    this.api.toolbar.toggleBlockSettings(false);
   }
 
   /**
@@ -412,7 +477,9 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
+      this.fetchingFailed(
+        this.api.i18n.t("Couldn't get this link data, try the other one")
+      );
 
       return;
     }
@@ -427,7 +494,9 @@ export default class LinkTool {
     };
 
     if (!metaData) {
-      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
+      this.fetchingFailed(
+        this.api.i18n.t('Wrong response format from the server')
+      );
 
       return;
     }
@@ -476,5 +545,110 @@ export default class LinkTool {
     }
 
     return el;
+  }
+
+  /**
+   * Custom paste handler, so that we can choose more accurately whether it should catch the paste or not.
+   *
+   * @param {PasteEvent | KeyboardEvent} event the paste event
+   */
+  handlePaste(event) {
+    const pasteConfig = {
+      patterns: {
+        embed: /^(?!.*\.(?:gif|jpe?g|tiff|png)(?:\?|$))https?:\/\/\S+$/i,
+      },
+    };
+    const patterns = pasteConfig.patterns;
+    const url = (event.clipboardData || window.clipboardData).getData('text');
+
+    if (!url) {
+      return;
+    }
+
+    const currentBlock = this.api.blocks.getBlockByIndex(
+      this.api.blocks.getCurrentBlockIndex()
+    );
+    const isParagraph = currentBlock.name === 'paragraph';
+    const isCurrentBlockEmpty = currentBlock.isEmpty;
+    const shouldDisplayEmbedLink =
+      patterns.embed.test(url) && !isVideoLink(url);
+
+    if (shouldDisplayEmbedLink && isParagraph && isCurrentBlockEmpty) {
+      event.preventDefault(); // Prevent the default paste behavior
+      this.insertPastedBlock(url);
+    }
+  }
+
+  /**
+   * Insert a link block
+   *
+   * @param {string} link the URL to include in the created link block
+   */
+  insertPastedBlock(link) {
+    const pluginName = this.getPluginName();
+
+    this.api.blocks.insert(
+      pluginName,
+      { link },
+      undefined,
+      this.api.blocks.getCurrentBlockIndex(),
+      true,
+      true
+    );
+    setTimeout(() => {
+      this.api.toolbar.toggleBlockSettings(true);
+    });
+  }
+
+  /**
+   * Get the name of the plugin dynamically from the Editor.js configuration.
+   * Ideally, we should get it dynamically without requiring the user to provide a config, but I haven't found how to do that.
+   *
+   * @returns {string} The name of the plugin
+   */
+  getPluginName() {
+    if (!this.config.key) {
+      throw new Error(
+        `You need to provide the tool key in the plugin config, e.g. { linkTool: { class: LinkTool, config: { key: 'linkTool' } } }`
+      );
+    }
+
+    return this.config.key;
+  }
+
+  /**
+   * Returns configuration for block tunes: remove the preview and keep the URL only
+   *
+   * @public
+   *
+   * @returns {Array}
+   */
+  renderSettings() {
+    // Merge default tunes with the ones that might be added by user
+    // @see https://github.com/editor-js/image/pull/49
+    const tunes =
+      this.config.actions && this.config.createOnPaste
+        ? LinkTool.tunes.concat(this.config.actions)
+        : LinkTool.tunes;
+
+    return tunes.map((tune) => ({
+      icon: tune.icon,
+      label: this.api.i18n.t(tune.title),
+      name: tune.name,
+      toggle: tune.toggle,
+      isActive: this.data[tune.name],
+      onActivate: () => {
+        /* If it'a user defined tune, execute it's callback stored in action property */
+        if (typeof tune.action === 'function') {
+          tune.action(tune.name);
+
+          return;
+        }
+
+        if (tune.name === 'urlOnly') {
+          this.replaceBlockWithParagraph();
+        }
+      },
+    }));
   }
 }
